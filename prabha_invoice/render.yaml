@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: prabha-invoice-agent
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false   # This means: ask user to fill it in the dashboard (keeps key secret)
