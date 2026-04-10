@@ -480,7 +480,14 @@ function toggleVoice(){
     if(final)processText(final.trim());
   };
   recognition.onerror=(e)=>{addLog('err','Mic: '+e.error);stopVoice();};
-  recognition.onend=()=>{if(isListening)recognition.start();};
+  recognition.onend=()=>{
+  if(isListening){
+    setTimeout(()=>{
+      try{ recognition.start(); }
+      catch(e){ addLog('err','Mic restart failed: '+e.message); stopVoice(); }
+    }, 300);
+  }
+};
   recognition.start();
 }
 function stopVoice(){
@@ -495,7 +502,8 @@ function sendCmd(){
 }
 
 let busy=false;
-async function processText(text){
+text = text.replace(/[\u0900-\u097F]/g, '').replace(/\s+/g,' ').trim();
+  if(!text) return;
   if(busy)return;busy=true;
   addLog('user',text);
   setStatus('thinking','Thinking...');setMic('thinking','Processing...');
