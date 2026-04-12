@@ -20,17 +20,16 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
 .app{display:flex;flex-direction:column;min-height:100dvh}
 
-/* TOPBAR */
 .topbar{background:var(--s1);border-bottom:1px solid var(--b1);padding:12px 16px;
   display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
 .topbar-title{font-size:14px;font-weight:600;color:var(--green);letter-spacing:.8px;
   text-transform:uppercase;flex:1}
 .tbar-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--b2);background:var(--s2);
-  color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+  color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
 .tbar-btn:active{background:var(--s3)}
 .tbar-btn.primary{border-color:var(--green);background:var(--gd);color:var(--gt)}
+.tbar-btn.danger{border-color:var(--red);color:var(--red)}
 
-/* STATUS BAR */
 .statusbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:8px 16px;
   display:flex;align-items:center;gap:10px;min-height:38px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--b2);flex-shrink:0;transition:all .3s}
@@ -42,10 +41,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-text.active{color:var(--text)}
 
-/* LOG PANEL */
 .log-panel{background:var(--s1);border-bottom:1px solid var(--b1);max-height:0;
   overflow:hidden;transition:max-height .3s ease}
-.log-panel.open{max-height:160px;overflow-y:auto}
+.log-panel.open{max-height:180px;overflow-y:auto}
 .log-entry{padding:5px 16px;font-size:11px;font-family:'DM Mono',monospace;
   border-bottom:1px solid var(--b1);line-height:1.5}
 .log-entry.agent{color:var(--gt)}
@@ -53,16 +51,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .log-entry.err{color:#ff8888;background:#ff000010}
 .log-entry.sys{color:var(--t3);font-size:10px}
 
-/* VOICE SECTION */
 .voice-section{padding:14px 16px;display:flex;align-items:center;gap:14px;
   background:var(--s1);border-bottom:1px solid var(--b1)}
-.mic-btn{width:56px;height:56px;border-radius:50%;border:2px solid var(--b2);
+.mic-btn{width:60px;height:60px;border-radius:50%;border:2px solid var(--b2);
   background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:24px;transition:all .2s;touch-action:manipulation}
-.mic-btn:active{transform:scale(0.92)}
+  flex-shrink:0;font-size:26px;transition:all .2s;touch-action:manipulation;user-select:none}
+.mic-btn:active{transform:scale(0.90)}
 .mic-btn.on{border-color:var(--green);background:var(--gd);animation:mpulse 1.3s infinite}
 .mic-btn.thinking{border-color:var(--amber);background:#f5a62318;animation:none}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,122,.25)}55%{box-shadow:0 0 0 12px rgba(0,200,122,0)}}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,122,.25)}55%{box-shadow:0 0 0 14px rgba(0,200,122,0)}}
 .mic-info{flex:1;min-width:0}
 .mic-label{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px}
 .mic-label.on{color:var(--gt)}
@@ -70,8 +67,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .mic-transcript{font-size:13px;color:var(--t3);font-style:italic;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mic-transcript.active{color:var(--text);font-style:normal}
+.mic-vol{height:3px;background:var(--b2);border-radius:2px;margin-top:6px;overflow:hidden}
+.mic-vol-bar{height:100%;background:var(--green);width:0%;transition:width .1s;border-radius:2px}
 
-/* CMD BAR */
 .cmd-bar{padding:10px 16px;display:flex;gap:8px;
   background:var(--s1);border-bottom:1px solid var(--b1)}
 .cmd-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:8px;
@@ -82,17 +80,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   background:var(--gd);color:var(--gt);font-size:15px;cursor:pointer;touch-action:manipulation}
 .cmd-send:active{transform:scale(0.95)}
 
-/* HINT BOX */
 .hint{margin:12px 16px 0;background:#00c87a0d;border:1px solid #00c87a22;
   border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--t2);line-height:1.9}
 .hint strong{color:var(--gt)}
 
-/* INVOICE */
 .inv-outer{padding:14px 12px 80px;flex:1}
 .inv-card{background:#fefefe;color:#1a1a1a;border-radius:var(--rl);overflow:hidden;
   box-shadow:0 2px 24px rgba(0,0,0,.5)}
 
-/* INVOICE HEADER */
 .inv-head{background:#f8f7f3;border-bottom:1px solid #e0ddd6;padding:14px 16px;
   display:flex;gap:12px;flex-wrap:wrap}
 .co-name{font-size:16px;font-weight:700;letter-spacing:.2px}
@@ -107,7 +102,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   font-family:'DM Sans',sans-serif;max-width:130px}
 .ifield input:focus{border-color:#0f6e56}
 
-/* PARTY */
 .party-wrap{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e0ddd6}
 @media(max-width:440px){.party-wrap{grid-template-columns:1fr}}
 .pcol{padding:10px 12px;border-right:1px solid #e0ddd6}
@@ -122,7 +116,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .prow input:focus,.prow textarea:focus{border-color:#0f6e56}
 .prow textarea{resize:vertical;min-height:38px}
 
-/* ITEMS */
 .items-hdr{display:grid;
   grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
   gap:4px;padding:7px 12px;background:#f8f7f3;border-bottom:1px solid #e0ddd6;
@@ -168,7 +161,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
 .add-btn:active{background:#e1f5ee}
 
-/* TOTALS */
 .totals-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:400px){.totals-grid{grid-template-columns:1fr}}
 .words-col{padding:12px 14px;border-right:1px solid #e0ddd6}
@@ -184,7 +176,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   padding:4px 0;font-size:12px;border-bottom:1px solid #f5f2ec}
 .amt-row.grand{font-weight:700;font-size:15px;color:#0f6e56;border-bottom:none;padding-top:6px}
 
-/* FOOTER */
 .inv-footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:380px){.inv-footer{grid-template-columns:1fr}}
 .fcol{padding:10px 14px;font-size:11px;color:#666;border-right:1px solid #e0ddd6}
@@ -197,7 +188,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .sig-line{margin-top:20px;border-top:1px solid #e0ddd6;padding-top:5px;
   font-size:9px;color:#bbb}
 
-/* FLASH ANIMATION for party fields */
 @keyframes ffield{0%{background:#c8ffe8}100%{background:transparent}}
 .flash-field input,.flash-field textarea{animation:ffield .9s ease}
 
@@ -218,7 +208,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="topbar-title">◆ Invoice Agent</div>
   <button class="tbar-btn" onclick="toggleLog()" id="logBtn">▾ Log</button>
   <button class="tbar-btn primary" onclick="window.print()">⬇ Print</button>
-  <button class="tbar-btn" onclick="clearInvoice()">↺ New</button>
+  <button class="tbar-btn danger" onclick="clearInvoice()">↺ New</button>
 </div>
 
 <div class="statusbar">
@@ -235,6 +225,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="mic-info">
     <div class="mic-label" id="micLabel">Tap mic to speak</div>
     <div class="mic-transcript" id="transcript">Or type a command below ↓</div>
+    <div class="mic-vol"><div class="mic-vol-bar" id="volBar"></div></div>
   </div>
 </div>
 
@@ -278,15 +269,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="party-wrap">
     <div class="pcol">
       <div class="sec-lbl">Bill To</div>
-      <div class="prow" id="f-billName"><label>Party Name</label><input id="billName" value="LAMBODAR MOULDERS PVT LTD"></div>
-      <div class="prow" id="f-billAddr"><label>Address</label><textarea id="billAddr">GUT NO 926 SOMPURI ROAD BIDKIN AURANGABAD</textarea></div>
-      <div class="prow" id="f-billGST"><label>GSTIN</label><input id="billGST" value="27AACCL7143A1ZV"></div>
+      <div class="prow" id="f-billName"><label>Party Name</label><input id="billName" value=""></div>
+      <div class="prow" id="f-billAddr"><label>Address</label><textarea id="billAddr"></textarea></div>
+      <div class="prow" id="f-billGST"><label>GSTIN</label><input id="billGST" value=""></div>
       <div class="prow"><label>State</label><input id="billState" value="27-Maharashtra"></div>
     </div>
     <div class="pcol">
       <div class="sec-lbl">Ship To</div>
-      <div class="prow" id="f-shipName"><label>Party Name</label><input id="shipName" value="LAMBODAR MOULDERS PVT LTD"></div>
-      <div class="prow" id="f-shipAddr"><label>Address</label><textarea id="shipAddr">GUT NO 926 SOMPURI ROAD BIDKIN AURANGABAD</textarea></div>
+      <div class="prow" id="f-shipName"><label>Party Name</label><input id="shipName" value=""></div>
+      <div class="prow" id="f-shipAddr"><label>Address</label><textarea id="shipAddr"></textarea></div>
       <div class="prow"><label>Terms</label><textarea id="terms" style="min-height:44px">WE DECLARE THAT THIS INVOICE SHOWS THE ACTUAL PRICE OF GOODS DESCRIBED AND THAT ALL PARTICULARS ARE TRUE AND CORRECT</textarea></div>
     </div>
   </div>
@@ -318,7 +309,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="inv-footer">
     <div class="fcol">
       <div class="flbl">Bank Details</div>
-      <textarea id="bankDetails" oninput="updateTotals()" placeholder="Add bank details..."></textarea>
+      <textarea id="bankDetails" placeholder="Add bank details..."></textarea>
     </div>
     <div class="fcol">
       <div class="flbl">For: PRABHA ENTERPRISES</div>
@@ -331,12 +322,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
-let items = [
-  {name:"TATA CROMA INST MANUAL 18L",hsn:"4821",qty:500,unit:"Nos",price:5.50,gst:18},
-  {name:"BE STICKER KENSTAR",hsn:"4821",qty:600,unit:"Nos",price:0.90,gst:18},
-  {name:"CG MANUAL",hsn:"4821",qty:4000,unit:"Nos",price:0.95,gst:18},
-  {name:"GODREJ FRIDGE MANUAL",hsn:"4821",qty:1000,unit:"Nos",price:0.95,gst:18},
-];
+let items = [];
 
 document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
 
@@ -344,7 +330,8 @@ function renderItems(){
   const body = document.getElementById('itemsBody');
   body.innerHTML = '';
   items.forEach((it,i)=>{
-    const taxable = it.qty*it.price, gstAmt = taxable*it.gst/100;
+    const taxable = it.qty*it.price;
+    const gstAmt = taxable*it.gst/100;
     const total = taxable+gstAmt;
     const row = document.createElement('div');
     row.className='item-row'; row.id='row-'+i;
@@ -354,7 +341,7 @@ function renderItems(){
       <div class="inum">${i+1}</div>
       <div class="iname"><div class="ifl">Item Name</div>
         <input value="${esc(it.name)}" onchange="items[${i}].name=this.value" style="font-weight:600"></div>
-      <div class="ihsn"><input value="${it.hsn}" onchange="items[${i}].hsn=this.value"></div>
+      <div class="ihsn"><input value="${esc(it.hsn)}" onchange="items[${i}].hsn=this.value"></div>
       <div class="iqty"><div class="ifl">Qty</div>
         <input type="number" value="${it.qty}" onchange="items[${i}].qty=+this.value;renderItems()" style="text-align:right"></div>
       <div class="iunit"><div class="ifl">Unit</div>
@@ -364,10 +351,15 @@ function renderItems(){
       <div class="igst"><div class="ifl">GST%</div>
         <select onchange="items[${i}].gst=+this.value;renderItems()">${gsts.map(r=>`<option value="${r}" ${it.gst===r?'selected':''}>${r}%</option>`).join('')}</select></div>
       <div class="iamt">₹ ${total.toFixed(2)}</div>
-      <button class="idel" onclick="items.splice(${i},1);renderItems()">✕</button>`;
+      <button class="idel" onclick="deleteItem(${i})">✕</button>`;
     body.appendChild(row);
   });
   updateTotals();
+}
+
+function deleteItem(i){
+  items.splice(i,1);
+  renderItems();
 }
 
 function addItem(){
@@ -375,8 +367,10 @@ function addItem(){
   renderItems();
   setTimeout(()=>{
     const rows=document.querySelectorAll('.item-row');
-    if(rows.length){const inp=rows[rows.length-1].querySelector('input');
-      if(inp){inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'});}}
+    if(rows.length){
+      const inp=rows[rows.length-1].querySelector('input');
+      if(inp){inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'});}
+    }
   },60);
 }
 
@@ -384,52 +378,62 @@ function updateTotals(){
   let taxable=0,gstTotal=0;
   const gstMap={};
   items.forEach(it=>{
-    const t=it.qty*it.price,g=t*it.gst/100;
-    taxable+=t;gstTotal+=g;
-    if(!gstMap[it.gst])gstMap[it.gst]={taxable:0,tax:0};
-    gstMap[it.gst].taxable+=t;gstMap[it.gst].tax+=g;
+    const t=it.qty*it.price, g=t*it.gst/100;
+    taxable+=t; gstTotal+=g;
+    if(!gstMap[it.gst]) gstMap[it.gst]={taxable:0,tax:0};
+    gstMap[it.gst].taxable+=t;
+    gstMap[it.gst].tax+=g;
   });
   const grand=taxable+gstTotal;
   document.getElementById('subTaxable').textContent='₹ '+taxable.toFixed(2);
   document.getElementById('totalGST').textContent='₹ '+gstTotal.toFixed(2);
   document.getElementById('grandTotal').textContent='₹ '+grand.toFixed(2);
   document.getElementById('amtWords').textContent=n2w(grand);
-  const tr=document.getElementById('taxRows');tr.innerHTML='';
+  const tr=document.getElementById('taxRows');
+  tr.innerHTML='';
   Object.entries(gstMap).forEach(([rate,d])=>{
     ['SGST','CGST'].forEach(type=>{
-      const r=document.createElement('div');r.className='tax-row2';
+      const r=document.createElement('div');
+      r.className='tax-row2';
       r.innerHTML=`<div>${type}</div><div>₹${d.taxable.toFixed(0)}</div><div>${(+rate/2).toFixed(1)}%</div><div style="text-align:right">₹${(d.tax/2).toFixed(2)}</div>`;
       tr.appendChild(r);
     });
   });
 }
 
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+}
 
 function n2w(n){
   const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
     'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   const t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-  const ps=Math.round((n%1)*100),rs=Math.floor(n);
+  const ps=Math.round((n%1)*100), rs=Math.floor(n);
   function w(x){
-    if(!x)return '';if(x<20)return o[x]+' ';
-    if(x<100)return t[Math.floor(x/10)]+' '+(x%10?o[x%10]+' ':'');
-    if(x<1000)return o[Math.floor(x/100)]+' Hundred '+(x%100?w(x%100):'');
-    if(x<100000)return w(Math.floor(x/1000))+'Thousand '+(x%1000?w(x%1000):'');
-    if(x<10000000)return w(Math.floor(x/100000))+'Lakh '+(x%100000?w(x%100000):'');
+    if(!x) return '';
+    if(x<20) return o[x]+' ';
+    if(x<100) return t[Math.floor(x/10)]+' '+(x%10?o[x%10]+' ':'');
+    if(x<1000) return o[Math.floor(x/100)]+' Hundred '+(x%100?w(x%100):'');
+    if(x<100000) return w(Math.floor(x/1000))+'Thousand '+(x%1000?w(x%1000):'');
+    if(x<10000000) return w(Math.floor(x/100000))+'Lakh '+(x%100000?w(x%100000):'');
     return w(Math.floor(x/10000000))+'Crore '+(x%10000000?w(x%10000000):'');
   }
-  if(!rs&&!ps)return 'Zero Rupees Only';
+  if(!rs&&!ps) return 'Zero Rupees Only';
   return (rs?w(rs).trim()+' Rupees':'')+(ps?' and '+w(ps).trim()+' Paise':'')+' Only';
 }
 
 function flashRow(i){
   const el=document.getElementById('row-'+i);
-  if(!el)return;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),900);
+  if(!el) return;
+  el.classList.add('flash');
+  setTimeout(()=>el.classList.remove('flash'),900);
 }
+
 function flashField(id){
   const el=document.getElementById(id);
-  if(!el)return;el.classList.add('flash-field');
+  if(!el) return;
+  el.classList.add('flash-field');
   el.scrollIntoView({behavior:'smooth',block:'nearest'});
   setTimeout(()=>el.classList.remove('flash-field'),900);
 }
@@ -442,129 +446,217 @@ function toggleLog(){
 }
 function addLog(type,msg){
   const p=document.getElementById('logPanel');
-  const d=document.createElement('div');d.className='log-entry '+type;
+  const d=document.createElement('div');
+  d.className='log-entry '+type;
   d.textContent=(type==='agent'?'✓ ':type==='user'?'▶ ':type==='err'?'✗ ':'  ')+msg;
-  p.appendChild(d);p.scrollTop=p.scrollHeight;
+  p.appendChild(d);
+  p.scrollTop=p.scrollHeight;
+  if(type==='err' && !logOpen) toggleLog();
 }
 
 function setStatus(state,msg){
   document.getElementById('dot').className='dot '+(state||'');
   const el=document.getElementById('statusText');
-  el.textContent=msg;el.className='status-text'+(state==='on'?' active':'');
+  el.textContent=msg;
+  el.className='status-text'+(state==='on'?' active':'');
 }
 function setMic(state,label){
   document.getElementById('micBtn').className='mic-btn '+(state||'');
   const lbl=document.getElementById('micLabel');
-  lbl.textContent=label;lbl.className='mic-label '+(state||'');
+  lbl.textContent=label;
+  lbl.className='mic-label '+(state||'');
 }
 
-let recognition=null,isListening=false;
+// ── VOICE ENGINE ──────────────────────────────────────────
+let recognition=null, isListening=false, voiceDebounce=null;
+let lastFinalText='', lastFinalTime=0;
+
 function toggleVoice(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!SR){alert('Voice needs Chrome browser.');return;}
-  if(isListening){stopVoice();return;}
-  recognition=new SR();
-  recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-IN';
-  recognition.onstart=()=>{
-    isListening=true;document.getElementById('micBtn').textContent='⏹';
-    setMic('on','Listening...');setStatus('on','Listening — speak your command');
-  };
-  recognition.onresult=(e)=>{
-    let interim='',final='';
-    for(let i=e.resultIndex;i<e.results.length;i++){
-      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
-      else interim+=e.results[i][0].transcript;
-    }
-    const t=document.getElementById('transcript');
-    t.textContent=final||interim||'...';t.className='mic-transcript active';
-    if(final)processText(final.trim());
-  };
-  recognition.onerror=(e)=>{addLog('err','Mic: '+e.error);stopVoice();};
-  recognition.onend=()=>{
-  if(isListening){
-    setTimeout(()=>{
-      try{ recognition.start(); }
-      catch(e){ addLog('err','Mic restart failed: '+e.message); stopVoice(); }
-    }, 300);
-  }
-};
-  recognition.start();
-}
-function stopVoice(){
-  isListening=false;if(recognition)recognition.stop();
-  document.getElementById('micBtn').textContent='🎤';
-  setMic('','Tap mic to speak');setStatus('','Ready');
+  if(!SR){ alert('Voice input needs Chrome browser on Android.'); return; }
+  if(isListening){ stopVoice(); return; }
+  startVoice();
 }
 
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.continuous=true;
+  recognition.interimResults=true;
+  recognition.lang='en-IN';
+
+  recognition.onstart=()=>{
+    isListening=true;
+    document.getElementById('micBtn').textContent='⏹';
+    setMic('on','Listening...');
+    setStatus('on','Listening — speak your command');
+    document.getElementById('volBar').style.width='0%';
+  };
+
+  recognition.onresult=(e)=>{
+    let interim='', final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){
+        const conf=e.results[i][0].confidence;
+        if(conf===0||conf>0.45) final+=e.results[i][0].transcript;
+      } else {
+        interim+=e.results[i][0].transcript;
+      }
+    }
+    const t=document.getElementById('transcript');
+    if(interim){
+      t.textContent=interim;
+      t.className='mic-transcript active';
+      document.getElementById('volBar').style.width=Math.min(100,30+interim.length*3)+'%';
+    }
+    if(final){
+      t.textContent=final;
+      t.className='mic-transcript active';
+      document.getElementById('volBar').style.width='0%';
+      const now=Date.now();
+      const cleanFinal=final.trim().toLowerCase();
+      if(cleanFinal===lastFinalText && now-lastFinalTime<1500) return;
+      lastFinalText=cleanFinal;
+      lastFinalTime=now;
+      clearTimeout(voiceDebounce);
+      voiceDebounce=setTimeout(()=>processText(final.trim()),400);
+    }
+  };
+
+  recognition.onerror=(e)=>{
+    if(e.error==='no-speech') return;
+    if(e.error==='aborted') return;
+    addLog('err','Mic error: '+e.error);
+    stopVoice();
+  };
+
+  recognition.onend=()=>{
+    document.getElementById('volBar').style.width='0%';
+    if(isListening){
+      setTimeout(()=>{
+        if(!isListening) return;
+        try{ recognition.start(); }
+        catch(err){ addLog('err','Mic restart failed: '+err.message); stopVoice(); }
+      },300);
+    }
+  };
+
+  recognition.start();
+}
+
+function stopVoice(){
+  isListening=false;
+  clearTimeout(voiceDebounce);
+  if(recognition){ try{recognition.stop();}catch(e){} }
+  document.getElementById('micBtn').textContent='🎤';
+  document.getElementById('volBar').style.width='0%';
+  setMic('','Tap mic to speak');
+  setStatus('','Ready');
+}
+
+// ── TEXT PROCESSING ───────────────────────────────────────
 function sendCmd(){
   const el=document.getElementById('cmdInput');
-  const txt=el.value.trim();if(!txt)return;el.value='';processText(txt);
+  const txt=el.value.trim();
+  if(!txt) return;
+  el.value='';
+  processText(txt);
 }
 
 let busy=false;
-text = text.replace(/[\u0900-\u097F]/g, '').replace(/\s+/g,' ').trim();
+
+async function processText(text){
+  text=text.replace(/[\u0900-\u097F]/g,'').replace(/\s+/g,' ').trim();
   if(!text) return;
-  if(busy)return;busy=true;
+  if(busy){ addLog('sys','Still processing — please wait...'); return; }
+  busy=true;
+
   addLog('user',text);
-  setStatus('thinking','Thinking...');setMic('thinking','Processing...');
+  setStatus('thinking','Thinking...');
+  setMic('thinking','Processing...');
   document.getElementById('transcript').textContent=text;
   document.getElementById('transcript').className='mic-transcript active';
 
   const state={
-    invoiceNo:document.getElementById('invNo').value,
-    date:document.getElementById('invDate').value,
-    placeSupply:document.getElementById('placeSupply').value,
-    billName:document.getElementById('billName').value,
-    billAddr:document.getElementById('billAddr').value,
-    billGST:document.getElementById('billGST').value,
-    shipName:document.getElementById('shipName').value,
-    shipAddr:document.getElementById('shipAddr').value,
-    bankDetails:document.getElementById('bankDetails').value,
-    terms:document.getElementById('terms').value,
-    items:items.map((it,i)=>({index:i+1,...it}))
+    invoiceNo: document.getElementById('invNo').value,
+    date: document.getElementById('invDate').value,
+    placeSupply: document.getElementById('placeSupply').value,
+    billName: document.getElementById('billName').value,
+    billAddr: document.getElementById('billAddr').value,
+    billGST: document.getElementById('billGST').value,
+    shipName: document.getElementById('shipName').value,
+    shipAddr: document.getElementById('shipAddr').value,
+    bankDetails: document.getElementById('bankDetails').value,
+    terms: document.getElementById('terms').value,
+    items: items.map((it,i)=>({index:i+1,...it}))
   };
 
   try{
     const res=await fetch('/agent',{
-      method:'POST',headers:{'Content-Type':'application/json'},
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({text,invoice_state:state})
     });
+    if(!res.ok) throw new Error('Server error: '+res.status);
     const data=await res.json();
-    if(data.error)throw new Error(data.error);
+    if(data.error) throw new Error(data.error);
     applyActions(data.actions||[]);
     const msg=data.message||'Done.';
-    addLog('agent',msg);setStatus('',msg);
+    addLog('agent',msg);
+    setStatus('',msg);
     document.getElementById('transcript').textContent=msg;
     document.getElementById('transcript').className='mic-transcript';
-  }catch(err){
-    addLog('err',err.message);setStatus('err','Error — tap Log to see');
-    if(!logOpen)toggleLog();
-  }finally{
+  } catch(err){
+    addLog('err',err.message);
+    setStatus('err','Error — see Log');
+  } finally{
     busy=false;
-    if(isListening){setMic('on','Listening...');setStatus('on','Listening');}
-    else{setMic('','Tap mic to speak');}
+    if(isListening){ setMic('on','Listening...'); setStatus('on','Listening'); }
+    else { setMic('','Tap mic to speak'); }
   }
 }
 
+// ── APPLY ACTIONS ─────────────────────────────────────────
 function applyActions(actions){
   actions.forEach(a=>{
     switch(a.type){
       case 'add_item':
-        items.push({name:a.name||'Item',hsn:a.hsn||'4821',qty:+a.qty||1,
-          unit:a.unit||'Nos',price:+a.price||0,gst:+a.gst||18});break;
-      case 'update_item':
+        items.push({
+          name: a.name||'Item',
+          hsn: a.hsn||'4821',
+          qty: +a.qty||1,
+          unit: a.unit||'Nos',
+          price: +a.price||0,
+          gst: +a.gst||18
+        });
+        break;
+      case 'update_item':{
         const idx=a.index-1;
-        if(items[idx]!==undefined)
-          items[idx][a.field]=isNaN(+a.value)?a.value:+a.value;break;
-      case 'delete_item':items.splice(a.index-1,1);break;
-      case 'clear_items':items=[];break;
-      case 'update_field':
+        if(idx>=0 && idx<items.length){
+          const val=a.value;
+          items[idx][a.field]=isNaN(+val)?val:+val;
+        }
+        break;
+      }
+      case 'delete_item':{
+        const idx=a.index-1;
+        if(idx>=0 && idx<items.length) items.splice(idx,1);
+        break;
+      }
+      case 'clear_items':
+        items=[];
+        break;
+      case 'update_field':{
         const el=document.getElementById(a.field);
-        if(el){el.value=a.value;flashField('f-'+a.field);}break;
+        if(el){ el.value=a.value; flashField('f-'+a.field); }
+        break;
+      }
       case 'copy_bill_to_ship':
         document.getElementById('shipName').value=document.getElementById('billName').value;
         document.getElementById('shipAddr').value=document.getElementById('billAddr').value;
-        flashField('f-shipName');flashField('f-shipAddr');break;
+        flashField('f-shipName');
+        flashField('f-shipAddr');
+        break;
     }
   });
   renderItems();
@@ -574,15 +666,21 @@ function applyActions(actions){
   },50);
 }
 
+// ── CLEAR INVOICE ─────────────────────────────────────────
 function clearInvoice(){
-  if(!confirm('Start a new invoice?'))return;
+  if(!confirm('Start a new invoice? All data will be cleared.')) return;
   items=[];
   ['billName','billAddr','billGST','billState','shipName','shipAddr','bankDetails'].forEach(id=>{
-    const e=document.getElementById(id);if(e)e.value='';
+    const e=document.getElementById(id);
+    if(e) e.value='';
   });
   document.getElementById('invNo').value='25/26-';
   document.getElementById('invDate').value=new Date().toISOString().split('T')[0];
-  renderItems();addLog('sys','New invoice started.');
+  document.getElementById('placeSupply').value='27-Maharashtra';
+  document.getElementById('terms').value='WE DECLARE THAT THIS INVOICE SHOWS THE ACTUAL PRICE OF GOODS DESCRIBED AND THAT ALL PARTICULARS ARE TRUE AND CORRECT';
+  renderItems();
+  addLog('sys','New invoice started.');
+  setStatus('','Ready — new invoice');
 }
 
 renderItems();
