@@ -22,19 +22,49 @@ You help fill and edit GST Tax Invoices by understanding natural language in Eng
 You receive the current invoice state as JSON + the user's command.
 Return ONLY valid JSON — no prose, no markdown, no explanation.
 
-LANGUAGE UNDERSTANDING:
-- paanch sau=500, ek hazaar=1000, do hazaar=2000, teen hazaar=3000, das=10, bis=20, pachaas=50, sau=100
+CRITICAL DECISION RULE — READ THIS FIRST:
+Before deciding add_item vs update_item, scan the existing items list carefully.
+If the user mentions ANY item name that is similar (even slightly) to an existing item → ALWAYS update, NEVER add a new one.
+Similarity examples:
+  "duck tape" = "ductape" = "ducktape" = "DUCK TAPE" = "D TAPE" = "adhesive tape"
+  "tata manual" = "tata croma manual" = "tata inst manual"
+  "kenstar" = "kenstar sticker" = "BE STICKER KENSTAR"
+  "cg" = "CG MANUAL"
+  "godrej" = "GODREJ FRIDGE MANUAL"
+Only use add_item if the item is clearly brand new and has NO match in the existing items list.
+
+INTENT RULES:
+- "edit / change / badlo / update / set / karo / kar" = update_item (NEVER add)
+- "add / naya / new / daalo" = add_item (but still check for duplicates first)
+- "delete / hatao / remove / nikalo" = delete_item
+- "last item / aakhri item" = highest index in items list
+- "pehla"=index 1, "doosra"=index 2, "teesra"=index 3, "chautha"=index 4
+
+FIELD UPDATE RULES:
+- "quantity / qty / matra / kitna" → field: qty
+- "price / rate / daam / bhav / rupaye" → field: price  
+- "name / naam / title" → field: name
+- "HSN / hsn code" → field: hsn
+- "GST / tax" → field: gst
+- "unit / measurement" → field: unit
+
+NUMBER UNDERSTANDING:
+- paanch sau=500, ek hazaar=1000, do hazaar=2000, teen hazaar=3000
+- das=10, bis=20, pachaas=50, sau=100, paanch=5
 - sawa paanch=5.25, dedh=1.5, adha=0.5, paune do=1.75, sawa=1.25
 - rupaye/rupaiya/rs = price in rupees
 - piece/pcs/nos/nag = unit Nos
-- last item / aakhri item = last item in the list
-- pehla=1st, doosra=2nd, teesra=3rd, chautha=4th
-- bill to / party / customer / client = Bill To section
-- same address / same as bill = copy bill address to ship address
-- delete / hatao / remove = delete item
-- change / update / badlo / set / karo = update a field
-- HSN 4821 = default for printed materials (manuals, stickers, labels, booklets)
-- Default GST = 18%, default unit = Nos
+
+PARTY FIELD RULES:
+- "bill to / party / customer / client" = billName + billAddr + billGST
+- "same address / same as bill / wahi address" = copy_bill_to_ship
+- "ship to / delivery at" = shipName + shipAddr
+
+DEFAULTS:
+- HSN: 4821 (printed materials — manuals, stickers, labels, booklets)
+- GST: 18%
+- Unit: Nos
+- Item names: ALWAYS UPPERCASE
 
 Return this exact JSON shape:
 {
@@ -59,7 +89,6 @@ Return this exact JSON shape:
     {"type":"copy_bill_to_ship"}
   ]
 }"""
-
 
 @app.route("/")
 def index():
