@@ -1,19 +1,15 @@
 """
 Prabha Enterprises — Voice Invoice Agent
-Backend: Flask + Groq (Llama 3.3 70B)
-
-The GROQ_API_KEY is read from environment variables (set in Render dashboard).
-Never hardcode API keys in source files.
+Backend: Flask + Groq (Llama 3.3 70B + Whisper)
 """
 
 import os
 import json
+import tempfile
 from flask import Flask, request, jsonify, send_from_directory
 from groq import Groq
 
 app = Flask(__name__, static_folder="static")
-
-# Groq client — reads GROQ_API_KEY from environment automatically
 client = Groq()
 
 SYSTEM_PROMPT = """You are an intelligent invoice assistant for Prabha Enterprises, Aurangabad, Maharashtra, India.
@@ -42,7 +38,7 @@ INTENT RULES:
 
 FIELD UPDATE RULES:
 - "quantity / qty / matra / kitna" → field: qty
-- "price / rate / daam / bhav / rupaye" → field: price  
+- "price / rate / daam / bhav / rupaye" → field: price
 - "name / naam / title" → field: name
 - "HSN / hsn code" → field: hsn
 - "GST / tax" → field: gst
@@ -90,44 +86,67 @@ Return this exact JSON shape:
   ]
 }"""
 
+
 @app.route("/")
 def index():
-    # Serve the main HTML page
     return send_from_directory("static", "index.html")
+
+
+@app.route("/transcribe", methods=["POST"])
+def transcribe():
+    if "audio" not in request.files:
+        return jsonify({"error": "No audio file"}), 400
+
+    audio_file = request.files["audio"]
+
+    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmp:
+        audio_file.save(tmp.name)
+        tmp_path = tmp.name
+
+    try:
+        with open(tmp_path, "rb") as f:
+            result = client.audio.transcriptions.create(
+                file=("audio.webm", f, "audio/webm"),
+                model="whisper-large-v3-turbo",
+                language="hi",        # hi = Hindi+Hinglish, best for your use case
+                response_format="text"
+            )
+        transcript = result.strip() if isinstance(result, str) else result.text.strip()
+        return jsonify({"text": transcript})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        os.unlink(tmp_path)
 
 
 @app.route("/agent", methods=["POST"])
 def agent():
-    body          = request.get_json(force=True)
-    user_text     = body.get("text", "").strip()
+    body = request.get_json(force=True)
+    user_text = body.get("text", "").strip()
     invoice_state = body.get("invoice_state", {})
 
     if not user_text:
         return jsonify({"error": "No text provided"}), 400
 
-    # Build the message we send to the AI
     user_content = (
         f"Current invoice state:\n{json.dumps(invoice_state, indent=2)}\n\n"
         f"User command: {user_text}"
     )
 
     try:
-        # Call Groq API — Llama 3.3 70B is the best free model for structured output
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user",   "content": user_content}
+                {"role": "user", "content": user_content}
             ],
-            temperature=0.1,      # Low temperature = consistent, predictable JSON output
+            temperature=0.1,
             max_tokens=900,
-            response_format={"type": "json_object"}  # Forces Groq to return valid JSON
+            response_format={"type": "json_object"}
         )
-
         raw = response.choices[0].message.content.strip()
         parsed = json.loads(raw)
         return jsonify(parsed)
-
     except json.JSONDecodeError:
         return jsonify({"error": f"AI returned invalid JSON: {raw[:200]}"}), 500
     except Exception as e:
@@ -136,8 +155,7 @@ def agent():
 
 @app.route("/health")
 def health():
-    # Simple health check — Render uses this to know the app is alive
-    return jsonify({"status": "ok", "model": "llama-3.3-70b-versatile"})
+    return jsonify({"status": "ok", "model": "llama-3.3-70b-versatile", "stt": "whisper-large-v3-turbo"})
 
 
 if __name__ == "__main__":
