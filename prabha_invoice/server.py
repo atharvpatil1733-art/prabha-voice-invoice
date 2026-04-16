@@ -108,7 +108,7 @@ def transcribe():
             result = client.audio.transcriptions.create(
                 file=("audio.webm", f, "audio/webm"),
                 model="whisper-large-v3-turbo",
-                language="hi",        # hi = Hindi+Hinglish, best for your use case
+                language="en",        # hi = Hindi+Hinglish, best for your use case
                 response_format="text"
             )
         transcript = result.strip() if isinstance(result, str) else result.text.strip()
