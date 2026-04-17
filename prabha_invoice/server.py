@@ -37,10 +37,6 @@ SYSTEM_PROMPT = """You are an expert invoice agent for Prabha Enterprises, Auran
 You understand spoken English commands and fill GST Tax Invoices intelligently.
 Return ONLY valid JSON. No prose, no markdown, no explanation.
 
-=== BANK DETAILS (always use this) ===
-Bank Of Maharashtra, T V Centre Hudco Aurangabad
-Account No: 60400903216 | IFSC: MAHB0001191 | Account Holder: PRABHA ENTERPRISES
-
 === KNOWN CUSTOMERS (memorized from real invoices) ===
 When customer name is recognized, always fill name + address + GSTIN automatically.
 
