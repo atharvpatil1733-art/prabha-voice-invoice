@@ -20,15 +20,17 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
 .app{display:flex;flex-direction:column;min-height:100dvh}
 
+/* TOPBAR */
 .topbar{background:var(--s1);border-bottom:1px solid var(--b1);padding:12px 16px;
   display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
-.topbar-title{font-size:14px;font-weight:600;color:var(--green);letter-spacing:.8px;text-transform:uppercase;flex:1}
+.topbar-title{font-size:14px;font-weight:600;color:var(--green);letter-spacing:.8px;
+  text-transform:uppercase;flex:1}
 .tbar-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--b2);background:var(--s2);
-  color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+  color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
 .tbar-btn:active{background:var(--s3)}
 .tbar-btn.primary{border-color:var(--green);background:var(--gd);color:var(--gt)}
-.tbar-btn.danger{border-color:var(--red);color:var(--red)}
 
+/* STATUS BAR */
 .statusbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:8px 16px;
   display:flex;align-items:center;gap:10px;min-height:38px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--b2);flex-shrink:0;transition:all .3s}
@@ -40,39 +42,41 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .status-text.active{color:var(--text)}
 
-.log-panel{background:var(--s1);border-bottom:1px solid var(--b1);max-height:0;overflow:hidden;transition:max-height .3s ease}
-.log-panel.open{max-height:180px;overflow-y:auto}
-.log-entry{padding:5px 16px;font-size:11px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--b1);line-height:1.5}
+/* LOG PANEL */
+.log-panel{background:var(--s1);border-bottom:1px solid var(--b1);max-height:0;
+  overflow:hidden;transition:max-height .3s ease}
+.log-panel.open{max-height:160px;overflow-y:auto}
+.log-entry{padding:5px 16px;font-size:11px;font-family:'DM Mono',monospace;
+  border-bottom:1px solid var(--b1);line-height:1.5}
 .log-entry.agent{color:var(--gt)}
 .log-entry.user{color:var(--t3)}
 .log-entry.err{color:#ff8888;background:#ff000010}
 .log-entry.sys{color:var(--t3);font-size:10px}
 
+/* VOICE SECTION */
 .voice-section{padding:14px 16px;display:flex;align-items:center;gap:14px;
   background:var(--s1);border-bottom:1px solid var(--b1)}
-.mic-btn{width:64px;height:64px;border-radius:50%;border:2px solid var(--b2);
+.mic-btn{width:56px;height:56px;border-radius:50%;border:2px solid var(--b2);
   background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:28px;transition:all .2s;touch-action:manipulation;user-select:none}
-.mic-btn:active{transform:scale(0.90)}
-.mic-btn.on{border-color:var(--green);background:var(--gd);animation:mpulse 1.3s infinite}
+  flex-shrink:0;font-size:24px;transition:all .2s;touch-action:manipulation}
+.mic-btn:active{transform:scale(0.92)}
+.mic-btn.recording{border-color:var(--red);background:#ff4d4d1a;animation:mpulse 1.3s infinite}
 .mic-btn.thinking{border-color:var(--amber);background:#f5a62318;animation:none}
-.mic-btn.recording{border-color:var(--red);background:#ff4d4d1a;animation:rpulse 0.8s infinite}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,122,.25)}55%{box-shadow:0 0 0 14px rgba(0,200,122,0)}}
-@keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.4)}55%{box-shadow:0 0 0 16px rgba(255,77,77,0)}}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.25)}55%{box-shadow:0 0 0 12px rgba(255,77,77,0)}}
 .mic-info{flex:1;min-width:0}
 .mic-label{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px}
-.mic-label.on{color:var(--gt)}
+.mic-label.recording{color:#ff8888}
 .mic-label.thinking{color:var(--amber)}
-.mic-label.recording{color:var(--red)}
-.mic-transcript{font-size:13px;color:var(--t3);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mic-transcript{font-size:13px;color:var(--t3);font-style:italic;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mic-transcript.active{color:var(--text);font-style:normal}
-.rec-timer{font-size:11px;color:var(--red);font-family:'DM Mono',monospace;margin-top:4px;display:none}
-.rec-timer.on{display:block}
-.mic-vol{height:3px;background:var(--b2);border-radius:2px;margin-top:6px;overflow:hidden}
-.mic-vol-bar{height:100%;background:var(--green);width:0%;transition:width .15s;border-radius:2px}
-.mic-vol-bar.rec{background:var(--red)}
+.vol-bar{height:3px;background:var(--b2);border-radius:2px;margin-top:6px;overflow:hidden;display:none}
+.vol-bar.show{display:block}
+.vol-fill{height:100%;background:var(--red);width:0%;transition:width .1s;border-radius:2px}
 
-.cmd-bar{padding:10px 16px;display:flex;gap:8px;background:var(--s1);border-bottom:1px solid var(--b1)}
+/* CMD BAR */
+.cmd-bar{padding:10px 16px;display:flex;gap:8px;
+  background:var(--s1);border-bottom:1px solid var(--b1)}
 .cmd-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:8px;
   padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none}
 .cmd-input:focus{border-color:var(--green)}
@@ -81,65 +85,85 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   background:var(--gd);color:var(--gt);font-size:15px;cursor:pointer;touch-action:manipulation}
 .cmd-send:active{transform:scale(0.95)}
 
+/* HINT BOX */
 .hint{margin:12px 16px 0;background:#00c87a0d;border:1px solid #00c87a22;
   border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--t2);line-height:1.9}
 .hint strong{color:var(--gt)}
 
+/* INVOICE */
 .inv-outer{padding:14px 12px 80px;flex:1}
-.inv-card{background:#fefefe;color:#1a1a1a;border-radius:var(--rl);overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,.5)}
+.inv-card{background:#fefefe;color:#1a1a1a;border-radius:var(--rl);overflow:hidden;
+  box-shadow:0 2px 24px rgba(0,0,0,.5)}
 
-.inv-head{background:#f8f7f3;border-bottom:1px solid #e0ddd6;padding:14px 16px;display:flex;gap:12px;flex-wrap:wrap}
+/* INVOICE HEADER */
+.inv-head{background:#f8f7f3;border-bottom:1px solid #e0ddd6;padding:14px 16px;
+  display:flex;gap:12px;flex-wrap:wrap}
 .co-name{font-size:16px;font-weight:700;letter-spacing:.2px}
 .co-meta{font-size:10.5px;color:#666;margin-top:4px;line-height:1.75}
 .inv-right{margin-left:auto;text-align:right;flex-shrink:0}
 .tax-badge{font-size:9px;font-weight:700;background:#0f6e56;color:#fff;
   padding:3px 8px;border-radius:10px;display:inline-block;margin-bottom:6px;letter-spacing:.6px}
-.ifield{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-bottom:4px;font-size:11px;color:#777}
+.ifield{display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  margin-bottom:4px;font-size:11px;color:#777}
 .ifield input{border:none;border-bottom:1px solid #ddd;background:transparent;
-  font-size:11px;color:#1a1a1a;outline:none;text-align:right;font-family:'DM Sans',sans-serif;max-width:130px}
+  font-size:11px;color:#1a1a1a;outline:none;text-align:right;
+  font-family:'DM Sans',sans-serif;max-width:130px}
 .ifield input:focus{border-color:#0f6e56}
 
+/* PARTY */
 .party-wrap{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e0ddd6}
 @media(max-width:440px){.party-wrap{grid-template-columns:1fr}}
 .pcol{padding:10px 12px;border-right:1px solid #e0ddd6}
 .pcol:last-child{border-right:none}
-.sec-lbl{font-size:9px;font-weight:700;color:#0f6e56;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.sec-lbl{font-size:9px;font-weight:700;color:#0f6e56;text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:7px}
 .prow{margin-bottom:6px}
 .prow label{font-size:9.5px;color:#999;display:block;margin-bottom:2px}
 .prow input,.prow textarea{width:100%;font-size:11.5px;font-family:'DM Sans',sans-serif;
-  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;background:#fff;color:#1a1a1a;outline:none}
+  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;background:#fff;
+  color:#1a1a1a;outline:none}
 .prow input:focus,.prow textarea:focus{border-color:#0f6e56}
 .prow textarea{resize:vertical;min-height:38px}
 
-.items-hdr{display:grid;grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
+/* ITEMS */
+.items-hdr{display:grid;
+  grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
   gap:4px;padding:7px 12px;background:#f8f7f3;border-bottom:1px solid #e0ddd6;
-  font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.4px;align-items:center}
-.item-row{display:grid;grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
-  gap:4px;padding:7px 12px;border-bottom:1px solid #f3f0ea;align-items:center;transition:background .4s}
+  font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.4px;
+  align-items:center}
+.item-row{display:grid;
+  grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
+  gap:4px;padding:7px 12px;border-bottom:1px solid #f3f0ea;align-items:center;
+  transition:background .4s}
 .item-row.flash{background:#d4f5e6!important}
 @media(max-width:520px){
   .items-hdr{display:none}
-  .item-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:1px solid #ede9e1;position:relative}
+  .item-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;
+    border-bottom:1px solid #ede9e1;position:relative}
   .item-row .inum{position:absolute;top:10px;left:12px;font-size:10px;color:#ccc}
   .item-row .iname{flex:1 1 100%;margin-left:22px}
   .item-row .iname input{font-weight:600;font-size:13px}
   .item-row .ihsn{display:none}
   .item-row .iqty,.item-row .iunit,.item-row .iprice,.item-row .igst{flex:1 1 calc(50% - 6px)}
-  .item-row .iamt{flex:1 1 100%;text-align:right;font-weight:700;color:#0f6e56;font-size:13px;padding-right:28px}
+  .item-row .iamt{flex:1 1 100%;text-align:right;font-weight:700;color:#0f6e56;
+    font-size:13px;padding-right:28px}
   .item-row .idel{position:absolute;top:10px;right:10px}
 }
 .inum{font-size:10px;color:#ccc;text-align:center}
 .ifl{font-size:9px;color:#aaa;display:none;margin-bottom:2px}
 @media(max-width:520px){.ifl{display:block}}
 .item-row input{font-size:11.5px;font-family:'DM Sans',sans-serif;padding:3px 5px;
-  border:.5px solid transparent;border-radius:4px;background:transparent;color:#1a1a1a;width:100%;outline:none}
+  border:.5px solid transparent;border-radius:4px;background:transparent;
+  color:#1a1a1a;width:100%;outline:none}
 .item-row input:hover,.item-row input:focus{border-color:#ccc;background:#fff}
 .item-row select{font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 3px;
-  border:.5px solid transparent;border-radius:4px;background:transparent;color:#1a1a1a;width:100%;cursor:pointer}
+  border:.5px solid transparent;border-radius:4px;background:transparent;
+  color:#1a1a1a;width:100%;cursor:pointer}
 .item-row select:hover{border-color:#ccc;background:#fff}
 .iamt{font-size:11.5px;font-weight:600;text-align:right;padding-right:2px}
 .idel{width:22px;height:22px;border-radius:4px;border:none;background:transparent;
-  color:#ccc;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+  color:#ccc;cursor:pointer;font-size:14px;display:flex;align-items:center;
+  justify-content:center;touch-action:manipulation}
 .idel:active{background:#fee2e2;color:#c0392b}
 .add-row{padding:8px 12px;border-bottom:1px solid #ede9e1}
 .add-btn{width:100%;padding:9px;border-radius:7px;border:1.5px dashed #0f6e56;
@@ -147,27 +171,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
 .add-btn:active{background:#e1f5ee}
 
+/* TOTALS */
 .totals-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:400px){.totals-grid{grid-template-columns:1fr}}
 .words-col{padding:12px 14px;border-right:1px solid #e0ddd6}
-.words-lbl{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.words-lbl{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:4px}
 .words-val{font-size:11px;color:#444;font-style:italic;line-height:1.6}
 .tax-tbl{margin-top:9px;padding-top:9px;border-top:1px solid #e5e2da}
-.tax-hdr,.tax-row2{display:grid;grid-template-columns:46px 1fr 40px 62px;gap:4px;font-size:10px;padding:2px 0;border-bottom:1px solid #f5f2ec}
+.tax-hdr,.tax-row2{display:grid;grid-template-columns:46px 1fr 40px 62px;
+  gap:4px;font-size:10px;padding:2px 0;border-bottom:1px solid #f5f2ec}
 .tax-hdr{font-weight:700;color:#bbb}
 .totals-col{padding:12px 14px}
-.amt-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;border-bottom:1px solid #f5f2ec}
+.amt-row{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;font-size:12px;border-bottom:1px solid #f5f2ec}
 .amt-row.grand{font-weight:700;font-size:15px;color:#0f6e56;border-bottom:none;padding-top:6px}
 
+/* FOOTER */
 .inv-footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:380px){.inv-footer{grid-template-columns:1fr}}
 .fcol{padding:10px 14px;font-size:11px;color:#666;border-right:1px solid #e0ddd6}
 .fcol:last-child{border-right:none;text-align:right}
-.flbl{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.flbl{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:4px}
 .fcol textarea{width:100%;font-size:11px;font-family:'DM Sans',sans-serif;
-  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;resize:vertical;min-height:32px;color:#555;background:#fff}
-.sig-line{margin-top:20px;border-top:1px solid #e0ddd6;padding-top:5px;font-size:9px;color:#bbb}
+  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;
+  resize:vertical;min-height:32px;color:#555;background:#fff}
+.sig-line{margin-top:20px;border-top:1px solid #e0ddd6;padding-top:5px;
+  font-size:9px;color:#bbb}
 
+/* FLASH ANIMATION for party fields */
 @keyframes ffield{0%{background:#c8ffe8}100%{background:transparent}}
 .flash-field input,.flash-field textarea{animation:ffield .9s ease}
 
@@ -176,7 +209,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .inv-outer{padding:0}
   .inv-card{border-radius:0;box-shadow:none}
   body{background:#fff}
-  .item-row input,.item-row select,.ifield input,.prow input,.prow textarea{border:none!important;background:transparent!important}
+  .item-row input,.item-row select,.ifield input,.prow input,.prow textarea{
+    border:none!important;background:transparent!important}
 }
 </style>
 </head>
@@ -187,7 +221,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   <div class="topbar-title">◆ Invoice Agent</div>
   <button class="tbar-btn" onclick="toggleLog()" id="logBtn">▾ Log</button>
   <button class="tbar-btn primary" onclick="window.print()">⬇ Print</button>
-  <button class="tbar-btn danger" onclick="clearInvoice()">↺ New</button>
+  <button class="tbar-btn" onclick="clearInvoice()">↺ New</button>
 </div>
 
 <div class="statusbar">
@@ -200,25 +234,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <div class="voice-section">
-  <button class="mic-btn" id="micBtn" onclick="toggleRecording()">🎤</button>
+  <button class="mic-btn" id="micBtn" onclick="toggleVoice()">🎤</button>
   <div class="mic-info">
-    <div class="mic-label" id="micLabel">Tap mic → speak → tap stop</div>
+    <div class="mic-label" id="micLabel">Tap mic to speak</div>
     <div class="mic-transcript" id="transcript">Or type a command below ↓</div>
-    <div class="rec-timer" id="recTimer">⏺ 0s</div>
-    <div class="mic-vol"><div class="mic-vol-bar" id="volBar"></div></div>
+    <div class="vol-bar" id="volBar"><div class="vol-fill" id="volFill"></div></div>
   </div>
 </div>
 
 <div class="cmd-bar">
   <input class="cmd-input" id="cmdInput"
-    placeholder='e.g. "add duck tape 500 qty 5.50 price" or Hinglish'
+    placeholder='e.g. "Invoice for Lambodar, 500 Tata manuals at 5.50"'
     onkeydown="if(event.key==='Enter')sendCmd()">
   <button class="cmd-send" onclick="sendCmd()">➤</button>
 </div>
 
 <div class="hint">
-  <strong>Voice:</strong> Tap mic → speak in English or Hinglish → tap stop → Whisper transcribes → invoice updates &nbsp;|&nbsp;
-  "500 Tata manuals sawa paanch rupaye" &nbsp;|&nbsp; "Lambodar ko bill karo" &nbsp;|&nbsp; "item 2 ki qty 1000 karo"
+  <strong>One sentence invoice:</strong> "Invoice for Lambodar, 500 Tata manuals at 5.50 and 600 BE stickers at 0.90" &nbsp;|&nbsp;
+  <strong>Single commands:</strong> "Add CG manual 1000 qty 0.95 price" &nbsp;|&nbsp; "Item 2 quantity 2000" &nbsp;|&nbsp; "Delete item 3" &nbsp;|&nbsp; "Invoice number 25/26-450"
 </div>
 
 <div class="inv-outer">
@@ -297,16 +330,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 </div>
 
 <script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
 let items = [];
 document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
 
-// ── RENDER ────────────────────────────────────────────────
+// ─── RENDER ITEMS ────────────────────────────────────────────────────────────
 function renderItems(){
   const body = document.getElementById('itemsBody');
   body.innerHTML = '';
   items.forEach((it,i)=>{
-    const taxable=it.qty*it.price, gstAmt=taxable*it.gst/100, total=taxable+gstAmt;
-    const row=document.createElement('div');
+    const taxable = it.qty*it.price, gstAmt = taxable*it.gst/100;
+    const total = taxable+gstAmt;
+    const row = document.createElement('div');
     row.className='item-row'; row.id='row-'+i;
     const units=['Nos','Kg','Box','Pcs','Set','Mtr','Ltr'];
     const gsts=[0,5,12,18,28];
@@ -314,7 +349,7 @@ function renderItems(){
       <div class="inum">${i+1}</div>
       <div class="iname"><div class="ifl">Item Name</div>
         <input value="${esc(it.name)}" onchange="items[${i}].name=this.value" style="font-weight:600"></div>
-      <div class="ihsn"><input value="${esc(it.hsn)}" onchange="items[${i}].hsn=this.value"></div>
+      <div class="ihsn"><input value="${it.hsn}" onchange="items[${i}].hsn=this.value"></div>
       <div class="iqty"><div class="ifl">Qty</div>
         <input type="number" value="${it.qty}" onchange="items[${i}].qty=+this.value;renderItems()" style="text-align:right"></div>
       <div class="iunit"><div class="ifl">Unit</div>
@@ -340,6 +375,7 @@ function addItem(){
   },60);
 }
 
+// ─── TOTALS ──────────────────────────────────────────────────────────────────
 function updateTotals(){
   let taxable=0,gstTotal=0;
   const gstMap={};
@@ -383,6 +419,7 @@ function n2w(n){
   return (rs?w(rs).trim()+' Rupees':'')+(ps?' and '+w(ps).trim()+' Paise':'')+' Only';
 }
 
+// ─── FLASH ───────────────────────────────────────────────────────────────────
 function flashRow(i){
   const el=document.getElementById('row-'+i);
   if(!el)return;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),900);
@@ -394,7 +431,7 @@ function flashField(id){
   setTimeout(()=>el.classList.remove('flash-field'),900);
 }
 
-// ── LOG & STATUS ──────────────────────────────────────────
+// ─── LOG ─────────────────────────────────────────────────────────────────────
 let logOpen=false;
 function toggleLog(){
   logOpen=!logOpen;
@@ -406,12 +443,13 @@ function addLog(type,msg){
   const d=document.createElement('div');d.className='log-entry '+type;
   d.textContent=(type==='agent'?'✓ ':type==='user'?'▶ ':type==='err'?'✗ ':'  ')+msg;
   p.appendChild(d);p.scrollTop=p.scrollHeight;
-  if(type==='err'&&!logOpen)toggleLog();
 }
+
+// ─── STATUS ──────────────────────────────────────────────────────────────────
 function setStatus(state,msg){
   document.getElementById('dot').className='dot '+(state||'');
   const el=document.getElementById('statusText');
-  el.textContent=msg;el.className='status-text'+(state==='on'?' active':'');
+  el.textContent=msg;el.className='status-text'+(state==='recording'?' active':'');
 }
 function setMic(state,label){
   document.getElementById('micBtn').className='mic-btn '+(state||'');
@@ -419,127 +457,115 @@ function setMic(state,label){
   lbl.textContent=label;lbl.className='mic-label '+(state||'');
 }
 
-// ── WHISPER VOICE ENGINE ──────────────────────────────────
+// ─── VOICE (MediaRecorder + Whisper) ─────────────────────────────────────────
 let mediaRecorder=null, audioChunks=[], isRecording=false;
-let recTimerInterval=null, recSeconds=0;
-let analyser=null, animFrame=null, audioCtx=null;
+let audioCtx=null, analyser=null, animFrame=null;
 
-async function toggleRecording(){
-  if(isRecording){ stopRecording(); return; }
-  await startRecording();
+function toggleVoice(){
+  if(isRecording){stopRecording();}else{startRecording();}
 }
 
 async function startRecording(){
   try{
     const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-
-    // Volume visualizer
-    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-    const source = audioCtx.createMediaStreamSource(stream);
-    analyser = audioCtx.createAnalyser();
-    analyser.fftSize=256;
-    source.connect(analyser);
-    animateVolume();
-
-    mediaRecorder = new MediaRecorder(stream, {mimeType: getSupportedMime()});
-    audioChunks = [];
-    mediaRecorder.ondataavailable = e => { if(e.data.size>0) audioChunks.push(e.data); };
-    mediaRecorder.start(100);
-    isRecording = true;
-
+    audioChunks=[];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = async ()=>{
+      stream.getTracks().forEach(t=>t.stop());
+      stopVisualizer();
+      await sendAudioToWhisper();
+    };
+    mediaRecorder.start();
+    isRecording=true;
     document.getElementById('micBtn').textContent='⏹';
     setMic('recording','Recording... tap to stop');
-    setStatus('on','Recording — speak clearly');
-    document.getElementById('recTimer').className='rec-timer on';
-    recSeconds=0;
-    recTimerInterval = setInterval(()=>{
-      recSeconds++;
-      document.getElementById('recTimer').textContent='⏺ '+recSeconds+'s';
-      if(recSeconds>=30) stopRecording(); // auto-stop at 30s
-    },1000);
+    setStatus('on','Recording — tap mic to stop and send');
+    document.getElementById('volBar').classList.add('show');
+    startVisualizer(stream);
 
-  } catch(err){
-    addLog('err','Mic access failed: '+err.message);
-    setStatus('err','Mic permission denied');
+    // Auto-stop at 30 seconds
+    setTimeout(()=>{ if(isRecording) stopRecording(); }, 30000);
+  }catch(err){
+    addLog('err','Mic access denied: '+err.message);
+    if(!logOpen)toggleLog();
   }
 }
 
 function stopRecording(){
-  if(!mediaRecorder||!isRecording) return;
-  isRecording=false;
-  clearInterval(recTimerInterval);
-  document.getElementById('recTimer').className='rec-timer';
-  cancelAnimationFrame(animFrame);
-  document.getElementById('volBar').style.width='0%';
-  document.getElementById('volBar').className='mic-vol-bar';
-
-  mediaRecorder.onstop = async ()=>{
-    const mime = getSupportedMime();
-    const blob = new Blob(audioChunks, {type: mime});
-    mediaRecorder.stream.getTracks().forEach(t=>t.stop());
-    if(audioCtx) audioCtx.close();
-
-    setMic('thinking','Transcribing with Whisper...');
-    setStatus('thinking','Sending to Whisper AI...');
+  if(mediaRecorder && mediaRecorder.state!=='inactive'){
+    isRecording=false;
+    mediaRecorder.stop();
     document.getElementById('micBtn').textContent='🎤';
-
-    await transcribeAudio(blob);
-  };
-  mediaRecorder.stop();
-}
-
-function getSupportedMime(){
-  const types=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'];
-  for(const t of types){ if(MediaRecorder.isTypeSupported(t)) return t; }
-  return 'audio/webm';
-}
-
-function animateVolume(){
-  if(!analyser) return;
-  const data=new Uint8Array(analyser.frequencyBinCount);
-  analyser.getByteFrequencyData(data);
-  const avg=data.reduce((a,b)=>a+b,0)/data.length;
-  const pct=Math.min(100,avg*2.5);
-  const bar=document.getElementById('volBar');
-  bar.style.width=pct+'%';
-  bar.className='mic-vol-bar rec';
-  animFrame=requestAnimationFrame(animateVolume);
-}
-
-async function transcribeAudio(blob){
-  const formData = new FormData();
-  formData.append('audio', blob, 'recording.webm');
-
-  try{
-    const res = await fetch('/transcribe',{method:'POST',body:formData});
-    if(!res.ok) throw new Error('Transcribe error: '+res.status);
-    const data = await res.json();
-    if(data.error) throw new Error(data.error);
-    const text = data.text.trim();
-    if(!text){ addLog('sys','No speech detected — try again'); setMic('','Tap mic to speak'); setStatus('','Ready'); return; }
-    document.getElementById('transcript').textContent=text;
-    document.getElementById('transcript').className='mic-transcript active';
-    addLog('user','[Whisper] '+text);
-    await processText(text);
-  } catch(err){
-    addLog('err',err.message);
-    setMic('','Tap mic to speak');
-    setStatus('err','Transcribe failed — see Log');
+    setMic('thinking','Transcribing...');
+    setStatus('thinking','Sending to AI...');
+    document.getElementById('volBar').classList.remove('show');
   }
 }
 
-// ── TEXT COMMAND ──────────────────────────────────────────
-function sendCmd(){
-  const el=document.getElementById('cmdInput');
-  const txt=el.value.trim();if(!txt)return;
-  el.value='';processText(txt);
+function startVisualizer(stream){
+  audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  audioCtx.createMediaStreamSource(stream).connect(analyser);
+  analyser.fftSize=256;
+  const data=new Uint8Array(analyser.frequencyBinCount);
+  function draw(){
+    animFrame=requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(data);
+    const avg=data.reduce((a,b)=>a+b,0)/data.length;
+    document.getElementById('volFill').style.width=Math.min(avg*2,100)+'%';
+  }
+  draw();
+}
+function stopVisualizer(){
+  if(animFrame)cancelAnimationFrame(animFrame);
+  if(audioCtx)audioCtx.close();
+  document.getElementById('volFill').style.width='0%';
 }
 
+async function sendAudioToWhisper(){
+  const blob = new Blob(audioChunks,{type:'audio/webm'});
+  const formData = new FormData();
+  formData.append('audio', blob, 'audio.webm');
+  try{
+    const res = await fetch('/transcribe',{method:'POST',body:formData});
+    const data = await res.json();
+    if(data.error) throw new Error(data.error);
+    const text = data.text.trim();
+    if(!text){
+      setMic('','Tap mic to speak');setStatus('','Ready');
+      addLog('err','No speech detected');return;
+    }
+    document.getElementById('transcript').textContent=text;
+    document.getElementById('transcript').className='mic-transcript active';
+    addLog('user',text);
+    await processText(text);
+  }catch(err){
+    addLog('err',err.message);setStatus('err','Error — tap Log to see');
+    setMic('','Tap mic to speak');
+    if(!logOpen)toggleLog();
+  }
+}
+
+// ─── TEXT COMMAND ─────────────────────────────────────────────────────────────
+function sendCmd(){
+  const el=document.getElementById('cmdInput');
+  const txt=el.value.trim();
+  if(!txt)return;
+  el.value='';
+  addLog('user',txt);
+  document.getElementById('transcript').textContent=txt;
+  document.getElementById('transcript').className='mic-transcript active';
+  processText(txt);
+}
+
+// ─── PROCESS TEXT → AGENT ─────────────────────────────────────────────────────
 let busy=false;
 async function processText(text){
-  text=text.replace(/[\u0900-\u097F]/g,'').replace(/\s+/g,' ').trim();
+  // Strip any Devanagari that slips through
+  text = text.replace(/[\u0900-\u097F]/g,'').replace(/\s+/g,' ').trim();
   if(!text)return;
-  if(busy){addLog('sys','Still processing — please wait...');return;}
+  if(busy){addLog('sys','Still processing last command...');return;}
   busy=true;
   setStatus('thinking','Thinking...');
   setMic('thinking','Processing...');
@@ -563,75 +589,62 @@ async function processText(text){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({text,invoice_state:state})
     });
-    if(!res.ok) throw new Error('Server error: '+res.status);
     const data=await res.json();
-    if(data.error) throw new Error(data.error);
+    if(data.error)throw new Error(data.error);
     applyActions(data.actions||[]);
     const msg=data.message||'Done.';
-    addLog('agent',msg);
-    setStatus('',msg);
+    addLog('agent',msg);setStatus('',msg);
     document.getElementById('transcript').textContent=msg;
     document.getElementById('transcript').className='mic-transcript';
-  } catch(err){
-    addLog('err',err.message);
-    setStatus('err','Error — see Log');
-  } finally{
+  }catch(err){
+    addLog('err',err.message);setStatus('err','Error — tap Log to see');
+    if(!logOpen)toggleLog();
+  }finally{
     busy=false;
     setMic('','Tap mic to speak');
   }
 }
 
-// ── APPLY ACTIONS ─────────────────────────────────────────
+// ─── APPLY ACTIONS ────────────────────────────────────────────────────────────
 function applyActions(actions){
   actions.forEach(a=>{
-    switch(a.type){
-      case 'add_item':
-        items.push({name:a.name||'Item',hsn:a.hsn||'4821',qty:+a.qty||1,unit:a.unit||'Nos',price:+a.price||0,gst:+a.gst||18});
-        break;
-      case 'update_item':{
-        const idx=a.index-1;
-        if(idx>=0&&idx<items.length){const val=a.value;items[idx][a.field]=isNaN(+val)?val:+val;}
-        break;
-      }
-      case 'delete_item':{
-        const idx=a.index-1;
-        if(idx>=0&&idx<items.length) items.splice(idx,1);
-        break;
-      }
-      case 'clear_items': items=[]; break;
-      case 'update_field':{
-        const el=document.getElementById(a.field);
-        if(el){el.value=a.value;flashField('f-'+a.field);}
-        break;
-      }
-      case 'copy_bill_to_ship':
-        document.getElementById('shipName').value=document.getElementById('billName').value;
-        document.getElementById('shipAddr').value=document.getElementById('billAddr').value;
-        flashField('f-shipName');flashField('f-shipAddr');
-        break;
+    if(a.type==='add_item'){
+      items.push({name:a.name||'Item',hsn:a.hsn||'4821',qty:+a.qty||1,
+        unit:a.unit||'Nos',price:+a.price||0,gst:+a.gst||18});
+    } else if(a.type==='update_item'){
+      const idx=a.index-1;
+      if(items[idx]!==undefined)
+        items[idx][a.field]=isNaN(+a.value)?a.value:+a.value;
+    } else if(a.type==='delete_item'){
+      items.splice(a.index-1,1);
+    } else if(a.type==='clear_items'){
+      items=[];
+    } else if(a.type==='update_field'){
+      const el=document.getElementById(a.field);
+      if(el){el.value=a.value;flashField('f-'+a.field);}
+    } else if(a.type==='copy_bill_to_ship'){
+      document.getElementById('shipName').value=document.getElementById('billName').value;
+      document.getElementById('shipAddr').value=document.getElementById('billAddr').value;
+      flashField('f-shipName');flashField('f-shipAddr');
     }
   });
   renderItems();
   setTimeout(()=>{
-    actions.filter(a=>a.type==='add_item').forEach(()=>flashRow(items.length-1));
+    actions.filter(a=>a.type==='add_item').forEach((_,i)=>flashRow(items.length-1-i));
     actions.filter(a=>a.type==='update_item').forEach(a=>flashRow(a.index-1));
   },50);
 }
 
-// ── CLEAR ─────────────────────────────────────────────────
+// ─── CLEAR INVOICE ────────────────────────────────────────────────────────────
 function clearInvoice(){
-  if(!confirm('Start a new invoice? All data will be cleared.')) return;
+  if(!confirm('Start a new invoice?'))return;
   items=[];
   ['billName','billAddr','billGST','billState','shipName','shipAddr','bankDetails'].forEach(id=>{
     const e=document.getElementById(id);if(e)e.value='';
   });
   document.getElementById('invNo').value='25/26-';
   document.getElementById('invDate').value=new Date().toISOString().split('T')[0];
-  document.getElementById('placeSupply').value='27-Maharashtra';
-  document.getElementById('terms').value='WE DECLARE THAT THIS INVOICE SHOWS THE ACTUAL PRICE OF GOODS DESCRIBED AND THAT ALL PARTICULARS ARE TRUE AND CORRECT';
-  renderItems();
-  addLog('sys','New invoice started.');
-  setStatus('','Ready — new invoice');
+  renderItems();addLog('sys','New invoice started.');
 }
 
 renderItems();
