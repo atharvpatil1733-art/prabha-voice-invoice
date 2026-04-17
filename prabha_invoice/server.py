@@ -1,6 +1,6 @@
 """
-Prabha Enterprises — Voice Invoice Agent
-Backend: Flask + Groq (Llama 3.3 70B)
+Prabha Enterprises — Voice Invoice Agent v2
+Backend: Flask + Groq (Llama 3.3 70B) + Groq Whisper
 """
 
 import os
@@ -11,75 +11,87 @@ from groq import Groq
 app = Flask(__name__, static_folder="static")
 client = Groq()
 
-SYSTEM_PROMPT = """You are an intelligent invoice assistant for Prabha Enterprises, Aurangabad, Maharashtra, India.
-You help fill and edit GST Tax Invoices by understanding natural language commands in English.
+# ── WHISPER PROMPT ─────────────────────────────────────────────────────────────
+# This tells Whisper the vocabulary it will hear — massively improves accuracy
+# for Indian names, product names, GST terms, and numbers spoken in English
+WHISPER_PROMPT = (
+    "Invoice for Prabha Enterprises Aurangabad. "
+    "Customers: Lambodar Moulders, Tata, Kenstar, Godrej, CG, BE, Croma. "
+    "Products: Tata Croma installation manual, BE sticker Kenstar, CG manual, "
+    "Godrej fridge manual, instruction booklet, label, sticker. "
+    "Numbers: quantity, price per piece, rupees, HSN 4821, GST 18 percent, SGST, CGST. "
+    "Commands: invoice for, add item, delete item, update quantity, update price, "
+    "bill to, ship to, invoice number, same address."
+)
 
-You receive the current invoice state as JSON + the user's command.
-Return ONLY valid JSON — no prose, no markdown, no explanation.
+# ── SYSTEM PROMPT ──────────────────────────────────────────────────────────────
+SYSTEM_PROMPT = """You are an expert invoice agent for Prabha Enterprises, Aurangabad, Maharashtra, India.
+You understand spoken English commands and fill GST Tax Invoices intelligently.
+Return ONLY valid JSON. No prose, no markdown.
 
-=== ONE-SENTENCE FULL INVOICE (most important feature) ===
-When user says something like:
-  "Invoice for Lambodar, 500 Tata manuals at 5.50 and 600 BE stickers at 0.90"
-  "Make invoice for ABC Company, 1000 CG manuals at 0.95 rupees"
-  "New invoice for XYZ, 200 Godrej manuals 2 rupees each, 100 stickers at 1 rupee"
+=== PRABHA'S REAL BUSINESS CONTEXT ===
+Common customers:
+- LAMBODAR MOULDERS PVT LTD | Address: GUT NO 926 SOMPURI ROAD BIDKIN AURANGABAD | GSTIN: 27AACCL7143A1ZV
+- TATA, KENSTAR, GODREJ, CG, BE (brand names — use as item prefixes)
 
-You MUST return ALL actions together in one response:
-  1. update_field for billName (and shipName same)
-  2. clear_items (to start fresh)
-  3. add_item for EACH item mentioned
+Common items (HSN 4821, GST 18% default):
+- TATA CROMA INSTALLATION MANUAL — typically 5.50 rupees
+- BE STICKER KENSTAR — typically 0.90 rupees
+- CG MANUAL — typically 0.95 rupees
+- GODREJ FRIDGE MANUAL — typically 0.95 rupees
+- INSTRUCTION BOOKLET — varies
+- LABEL / STICKER — varies
 
-Party name rules:
-  - "for [name]" or "to [name]" = billName and shipName
-  - If address/GSTIN not mentioned, leave them as-is (don't clear them)
-  - Always copy billName to shipName unless user says different ship address
+=== ONE-SENTENCE FULL INVOICE (KEY FEATURE) ===
+"Invoice for Lambodar, 500 Tata manuals at 5.50 and 600 BE stickers at 0.90"
+→ update_field billName + update_field shipName + clear_items + add_item x N
 
-Item parsing rules:
-  - "[qty] [item name] at [price]" or "[qty] [item name] [price] rupees"
-  - Numbers: 500=500, 1000=1000, 0.90=0.90, 5.50=5.50
-  - "each" / "rupees" / "at" / "per piece" all mean price
-  - If GST not mentioned, default 18%
-  - If HSN not mentioned, default 4821
-  - If unit not mentioned, default Nos
-  - Item names ALWAYS UPPERCASE
+"Make invoice for Lambodar" (no items mentioned)
+→ update_field billName + update_field shipName + copy known address+GSTIN if customer recognized
+
+SMART RULES:
+- If customer name sounds like "Lambodar" / "Lambodar Moulders" → use full name + known address + GSTIN
+- If item sounds like "Tata manual" / "installation manual" → use "TATA CROMA INSTALLATION MANUAL"
+- If price not mentioned for known items → use typical price from context above
+- If GST not mentioned → 18%
+- If HSN not mentioned → 4821
+- If unit not mentioned → Nos
+- Always UPPERCASE for names and item names
+- "and" between items = multiple add_item actions
 
 === SINGLE COMMANDS ===
-- "bill to ABC Company" -> update_field billName only
-- "add Tata manual 500 qty 5.50 price" -> add_item only
-- "item 2 quantity 2000" -> update_item index 2
-- "delete item 3" -> delete_item index 3
-- "invoice number 25/26-450" -> update_field invNo
-- "same address for shipping" -> copy_bill_to_ship
-- "clear all items" -> clear_items
+- "bill to [name]" → update_field billName
+- "add [item] [qty] at [price]" → add_item
+- "item [n] quantity [x]" → update_item
+- "delete item [n]" → delete_item
+- "invoice number [x]" → update_field invNo
+- "same address" → copy_bill_to_ship
+- "clear all" → clear_items
 
-=== FIELD NAMES (exact, case-sensitive) ===
+=== FIELD NAMES (exact) ===
 billName, billAddr, billGST, shipName, shipAddr, invNo, invDate, bankDetails
 
-=== OUTPUT FORMAT ===
+=== OUTPUT JSON ===
 {
-  "message": "one sentence describing what you did",
+  "message": "one sentence of what you did",
   "actions": [
-    {"type":"update_field","field":"billName","value":"PARTY NAME UPPERCASE"},
-    {"type":"update_field","field":"shipName","value":"PARTY NAME UPPERCASE"},
+    {"type":"update_field","field":"billName","value":"LAMBODAR MOULDERS PVT LTD"},
+    {"type":"update_field","field":"billAddr","value":"GUT NO 926 SOMPURI ROAD BIDKIN AURANGABAD"},
+    {"type":"update_field","field":"billGST","value":"27AACCL7143A1ZV"},
+    {"type":"update_field","field":"shipName","value":"LAMBODAR MOULDERS PVT LTD"},
+    {"type":"update_field","field":"shipAddr","value":"GUT NO 926 SOMPURI ROAD BIDKIN AURANGABAD"},
     {"type":"clear_items"},
-    {"type":"add_item","name":"ITEM NAME UPPERCASE","hsn":"4821","qty":500,"unit":"Nos","price":5.50,"gst":18},
-    {"type":"add_item","name":"SECOND ITEM UPPERCASE","hsn":"4821","qty":600,"unit":"Nos","price":0.90,"gst":18},
+    {"type":"add_item","name":"TATA CROMA INSTALLATION MANUAL","hsn":"4821","qty":500,"unit":"Nos","price":5.50,"gst":18},
+    {"type":"add_item","name":"BE STICKER KENSTAR","hsn":"4821","qty":600,"unit":"Nos","price":0.90,"gst":18},
     {"type":"update_item","index":1,"field":"qty","value":500},
-    {"type":"update_item","index":1,"field":"price","value":6.50},
-    {"type":"update_item","index":1,"field":"name","value":"NEW NAME"},
-    {"type":"update_item","index":1,"field":"gst","value":12},
-    {"type":"update_item","index":1,"field":"unit","value":"Kg"},
     {"type":"delete_item","index":2},
-    {"type":"update_field","field":"billAddr","value":"address here"},
-    {"type":"update_field","field":"billGST","value":"27XXXXX1234X1ZX"},
-    {"type":"update_field","field":"invNo","value":"25/26-444"},
-    {"type":"update_field","field":"invDate","value":"2026-02-15"},
     {"type":"copy_bill_to_ship"}
   ]
 }
 
-CRITICAL: For one-sentence full invoice commands, ALWAYS include clear_items + all add_item actions.
-CRITICAL: Party names and item names ALWAYS in UPPERCASE.
-CRITICAL: Return ONLY the JSON object, nothing else."""
+CRITICAL: For full invoice commands always: clear_items first, then add all items.
+CRITICAL: If customer is recognized, always fill address and GSTIN too.
+CRITICAL: Return ONLY the JSON object."""
 
 
 @app.route("/")
@@ -97,9 +109,11 @@ def transcribe():
             model="whisper-large-v3-turbo",
             file=("audio.webm", audio_file.read(), "audio/webm"),
             language="en",
-            response_format="text"
+            prompt=WHISPER_PROMPT,        # <-- KEY: business vocab injection
+            response_format="text",
+            temperature=0.0               # <-- deterministic, most accurate
         )
-        return jsonify({"text": transcription})
+        return jsonify({"text": str(transcription).strip()})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
