@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Invoice Agent — Prabha Enterprises</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -19,69 +20,60 @@
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
 .app{display:flex;flex-direction:column;min-height:100dvh}
 
+/* TOPBAR */
 .topbar{background:var(--s1);border-bottom:1px solid var(--b1);padding:12px 16px;
   display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100}
-.topbar-title{font-size:14px;font-weight:600;color:var(--green);letter-spacing:.8px;text-transform:uppercase;flex:1}
+.topbar-title{font-size:14px;font-weight:600;color:var(--green);letter-spacing:.8px;
+  text-transform:uppercase;flex:1}
 .tbar-btn{padding:7px 12px;border-radius:8px;border:1px solid var(--b2);background:var(--s2);
   color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
 .tbar-btn:active{background:var(--s3)}
 .tbar-btn.primary{border-color:var(--green);background:var(--gd);color:var(--gt)}
 
+/* STATUS BAR */
 .statusbar{background:var(--s2);border-bottom:1px solid var(--b1);padding:8px 16px;
   display:flex;align-items:center;gap:10px;min-height:38px}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--b2);flex-shrink:0;transition:all .3s}
-.dot.recording{background:var(--red);animation:dpulse 1s infinite}
+.dot.on{background:var(--green);animation:dpulse 1.2s infinite}
 .dot.thinking{background:var(--amber)}
 .dot.err{background:var(--red)}
-.dot.ok{background:var(--green)}
-@keyframes dpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.4)}60%{box-shadow:0 0 0 8px rgba(255,77,77,0)}}
+@keyframes dpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,122,.3)}60%{box-shadow:0 0 0 8px rgba(0,200,122,0)}}
 .status-text{color:var(--t2);flex:1;font-size:12px;font-family:'DM Mono',monospace;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status-text.active{color:var(--text)}
 
-.log-panel{background:var(--s1);border-bottom:1px solid var(--b1);max-height:0;overflow:hidden;transition:max-height .3s ease}
+/* LOG PANEL */
+.log-panel{background:var(--s1);border-bottom:1px solid var(--b1);max-height:0;
+  overflow:hidden;transition:max-height .3s ease}
 .log-panel.open{max-height:160px;overflow-y:auto}
-.log-entry{padding:5px 16px;font-size:11px;font-family:'DM Mono',monospace;border-bottom:1px solid var(--b1);line-height:1.5}
+.log-entry{padding:5px 16px;font-size:11px;font-family:'DM Mono',monospace;
+  border-bottom:1px solid var(--b1);line-height:1.5}
 .log-entry.agent{color:var(--gt)}
-.log-entry.user{color:#88aaff}
+.log-entry.user{color:var(--t3)}
 .log-entry.err{color:#ff8888;background:#ff000010}
 .log-entry.sys{color:var(--t3);font-size:10px}
 
-/* VOICE SECTION — mic on RIGHT for right-handed use */
-.voice-section{padding:14px 16px;background:var(--s1);border-bottom:1px solid var(--b1)}
-.voice-row{display:flex;align-items:center;gap:14px}
-.voice-info{flex:1;min-width:0}
-.voice-label{font-size:13px;font-weight:600;color:var(--t2);margin-bottom:4px}
-.voice-label.recording{color:#ff8888}
-.voice-label.thinking{color:var(--amber)}
-.voice-label.ok{color:var(--gt)}
-.voice-transcript{font-size:12px;color:var(--t3);line-height:1.5;
-  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.voice-transcript.active{color:var(--text)}
-.vol-wrap{margin-top:7px;height:4px;background:var(--b1);border-radius:2px;overflow:hidden;display:none}
-.vol-wrap.show{display:block}
-.vol-fill{height:100%;background:var(--red);width:0%;transition:width .08s;border-radius:2px}
-
-/* MIC BUTTON — RIGHT SIDE, big thumb target */
-.mic-btn{
-  width:68px;height:68px;border-radius:50%;
-  border:3px solid var(--b2);background:var(--s2);
-  cursor:pointer;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  flex-shrink:0;font-size:26px;
-  transition:all .2s;touch-action:manipulation;
-  user-select:none;-webkit-user-select:none;
-}
-.mic-btn .mic-hint{font-size:8px;color:var(--t3);font-family:'DM Mono',monospace;margin-top:2px;letter-spacing:.3px}
-.mic-btn.recording{
-  border-color:var(--red);background:#ff4d4d22;
-  animation:mpulse 1.2s infinite;
-}
+/* VOICE SECTION */
+.voice-section{padding:14px 16px;display:flex;align-items:center;gap:14px;
+  background:var(--s1);border-bottom:1px solid var(--b1)}
+.mic-btn{width:56px;height:56px;border-radius:50%;border:2px solid var(--b2);
+  background:var(--s2);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:24px;transition:all .2s;touch-action:manipulation}
+.mic-btn:active{transform:scale(0.92)}
+.mic-btn.on{border-color:var(--green);background:var(--gd);animation:mpulse 1.3s infinite}
 .mic-btn.thinking{border-color:var(--amber);background:#f5a62318;animation:none}
-.mic-btn.ok{border-color:var(--green);background:var(--gd);animation:none}
-@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.3)}55%{box-shadow:0 0 0 14px rgba(255,77,77,0)}}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,122,.25)}55%{box-shadow:0 0 0 12px rgba(0,200,122,0)}}
+.mic-info{flex:1;min-width:0}
+.mic-label{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:3px}
+.mic-label.on{color:var(--gt)}
+.mic-label.thinking{color:var(--amber)}
+.mic-transcript{font-size:13px;color:var(--t3);font-style:italic;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mic-transcript.active{color:var(--text);font-style:normal}
 
 /* CMD BAR */
-.cmd-bar{padding:10px 16px;display:flex;gap:8px;background:var(--s1);border-bottom:1px solid var(--b1)}
+.cmd-bar{padding:10px 16px;display:flex;gap:8px;
+  background:var(--s1);border-bottom:1px solid var(--b1)}
 .cmd-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:8px;
   padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none}
 .cmd-input:focus{border-color:var(--green)}
@@ -90,85 +82,191 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   background:var(--gd);color:var(--gt);font-size:15px;cursor:pointer;touch-action:manipulation}
 .cmd-send:active{transform:scale(0.95)}
 
+/* HINT BOX */
 .hint{margin:12px 16px 0;background:#00c87a0d;border:1px solid #00c87a22;
   border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--t2);line-height:1.9}
 .hint strong{color:var(--gt)}
 
+/* MEMORY SECTION */
+.memory-section{padding:10px 16px;display:flex;gap:8px;border-bottom:1px solid var(--b1)}
+.mem-btn{flex:1;padding:9px 8px;border-radius:8px;border:1px solid var(--b2);
+  background:var(--s2);color:var(--t2);font-size:12px;font-weight:500;
+  cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;touch-action:manipulation}
+.mem-btn:active{background:var(--s3)}
+.mem-btn span{display:block;font-size:10px;color:var(--t3);margin-top:2px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--s1);border-radius:var(--rl) var(--rl) 0 0;
+  width:100%;max-width:520px;max-height:80dvh;display:flex;flex-direction:column;
+  border:1px solid var(--b2);border-bottom:none}
+.modal-head{padding:14px 16px;border-bottom:1px solid var(--b1);
+  display:flex;align-items:center;gap:10px}
+.modal-title{font-size:14px;font-weight:600;color:var(--text);flex:1}
+.modal-close{width:30px;height:30px;border-radius:6px;border:1px solid var(--b2);
+  background:var(--s2);color:var(--t2);cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center}
+.modal-body{padding:14px 16px;overflow-y:auto;flex:1}
+
+/* MEMORY LIST */
+.mem-list{display:flex;flex-direction:column;gap:8px}
+.mem-item{background:var(--s2);border:1px solid var(--b1);border-radius:8px;
+  padding:10px 12px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+  transition:border-color .2s}
+.mem-item:active{border-color:var(--green)}
+.mem-item-info{flex:1;min-width:0}
+.mem-item-name{font-size:13px;font-weight:600;color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem-item-sub{font-size:11px;color:var(--t3);margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem-del{width:28px;height:28px;border-radius:6px;border:1px solid var(--b2);
+  background:transparent;color:var(--t3);cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mem-del:active{background:#ff4d4d22;border-color:var(--red);color:var(--red)}
+.mem-empty{text-align:center;color:var(--t3);font-size:13px;padding:24px 0;line-height:1.9}
+
+/* SAVE FORM */
+.save-form{background:var(--s2);border:1px solid var(--b1);border-radius:8px;
+  padding:12px;margin-bottom:12px}
+.save-form-title{font-size:11px;font-weight:600;color:var(--gt);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.sf-row{margin-bottom:8px}
+.sf-row label{font-size:10px;color:var(--t3);display:block;margin-bottom:3px}
+.sf-row input{width:100%;background:var(--s3);border:1px solid var(--b2);
+  border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);
+  font-family:'DM Sans',sans-serif;outline:none}
+.sf-row input:focus{border-color:var(--green)}
+.sf-save{width:100%;padding:9px;border-radius:7px;border:1px solid var(--green);
+  background:var(--gd);color:var(--gt);font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
+.sf-save:active{background:#00c87a33}
+
 /* INVOICE */
 .inv-outer{padding:14px 12px 80px;flex:1}
-.inv-card{background:#fefefe;color:#1a1a1a;border-radius:var(--rl);overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,.5)}
-.inv-head{background:#f8f7f3;border-bottom:1px solid #e0ddd6;padding:14px 16px;display:flex;gap:12px;flex-wrap:wrap}
+.inv-card{background:#fefefe;color:#1a1a1a;border-radius:var(--rl);overflow:hidden;
+  box-shadow:0 2px 24px rgba(0,0,0,.5)}
+
+/* INVOICE HEADER */
+.inv-head{background:#f8f7f3;border-bottom:1px solid #e0ddd6;padding:14px 16px;
+  display:flex;gap:12px;flex-wrap:wrap}
 .co-name{font-size:16px;font-weight:700;letter-spacing:.2px}
 .co-meta{font-size:10.5px;color:#666;margin-top:4px;line-height:1.75}
 .inv-right{margin-left:auto;text-align:right;flex-shrink:0}
-.tax-badge{font-size:9px;font-weight:700;background:#0f6e56;color:#fff;padding:3px 8px;border-radius:10px;display:inline-block;margin-bottom:6px;letter-spacing:.6px}
-.ifield{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin-bottom:4px;font-size:11px;color:#777}
-.ifield input{border:none;border-bottom:1px solid #ddd;background:transparent;font-size:11px;color:#1a1a1a;outline:none;text-align:right;font-family:'DM Sans',sans-serif;max-width:130px}
+.tax-badge{font-size:9px;font-weight:700;background:#0f6e56;color:#fff;
+  padding:3px 8px;border-radius:10px;display:inline-block;margin-bottom:6px;letter-spacing:.6px}
+.ifield{display:flex;align-items:center;justify-content:flex-end;gap:5px;
+  margin-bottom:4px;font-size:11px;color:#777}
+.ifield input{border:none;border-bottom:1px solid #ddd;background:transparent;
+  font-size:11px;color:#1a1a1a;outline:none;text-align:right;
+  font-family:'DM Sans',sans-serif;max-width:130px}
 .ifield input:focus{border-color:#0f6e56}
+
+/* PARTY */
 .party-wrap{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e0ddd6}
 @media(max-width:440px){.party-wrap{grid-template-columns:1fr}}
 .pcol{padding:10px 12px;border-right:1px solid #e0ddd6}
 .pcol:last-child{border-right:none}
-.sec-lbl{font-size:9px;font-weight:700;color:#0f6e56;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.sec-lbl{font-size:9px;font-weight:700;color:#0f6e56;text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:7px}
 .prow{margin-bottom:6px}
 .prow label{font-size:9.5px;color:#999;display:block;margin-bottom:2px}
-.prow input,.prow textarea{width:100%;font-size:11.5px;font-family:'DM Sans',sans-serif;padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;background:#fff;color:#1a1a1a;outline:none}
+.prow input,.prow textarea{width:100%;font-size:11.5px;font-family:'DM Sans',sans-serif;
+  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;background:#fff;
+  color:#1a1a1a;outline:none}
 .prow input:focus,.prow textarea:focus{border-color:#0f6e56}
 .prow textarea{resize:vertical;min-height:38px}
-.items-hdr{display:grid;grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
+
+/* ITEMS */
+.items-hdr{display:grid;
+  grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
   gap:4px;padding:7px 12px;background:#f8f7f3;border-bottom:1px solid #e0ddd6;
-  font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.4px;align-items:center}
-.item-row{display:grid;grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
-  gap:4px;padding:7px 12px;border-bottom:1px solid #f3f0ea;align-items:center;transition:background .4s}
+  font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.4px;
+  align-items:center}
+.item-row{display:grid;
+  grid-template-columns:22px 1fr 54px 50px 48px 66px 52px 70px 24px;
+  gap:4px;padding:7px 12px;border-bottom:1px solid #f3f0ea;align-items:center;
+  transition:background .4s}
 .item-row.flash{background:#d4f5e6!important}
 @media(max-width:520px){
   .items-hdr{display:none}
-  .item-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:1px solid #ede9e1;position:relative}
+  .item-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;
+    border-bottom:1px solid #ede9e1;position:relative}
   .item-row .inum{position:absolute;top:10px;left:12px;font-size:10px;color:#ccc}
   .item-row .iname{flex:1 1 100%;margin-left:22px}
   .item-row .iname input{font-weight:600;font-size:13px}
   .item-row .ihsn{display:none}
   .item-row .iqty,.item-row .iunit,.item-row .iprice,.item-row .igst{flex:1 1 calc(50% - 6px)}
-  .item-row .iamt{flex:1 1 100%;text-align:right;font-weight:700;color:#0f6e56;font-size:13px;padding-right:28px}
+  .item-row .iamt{flex:1 1 100%;text-align:right;font-weight:700;color:#0f6e56;
+    font-size:13px;padding-right:28px}
   .item-row .idel{position:absolute;top:10px;right:10px}
 }
 .inum{font-size:10px;color:#ccc;text-align:center}
 .ifl{font-size:9px;color:#aaa;display:none;margin-bottom:2px}
 @media(max-width:520px){.ifl{display:block}}
-.item-row input{font-size:11.5px;font-family:'DM Sans',sans-serif;padding:3px 5px;border:.5px solid transparent;border-radius:4px;background:transparent;color:#1a1a1a;width:100%;outline:none}
+.item-row input{font-size:11.5px;font-family:'DM Sans',sans-serif;padding:3px 5px;
+  border:.5px solid transparent;border-radius:4px;background:transparent;
+  color:#1a1a1a;width:100%;outline:none}
 .item-row input:hover,.item-row input:focus{border-color:#ccc;background:#fff}
-.item-row select{font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 3px;border:.5px solid transparent;border-radius:4px;background:transparent;color:#1a1a1a;width:100%;cursor:pointer}
+.item-row select{font-size:11px;font-family:'DM Sans',sans-serif;padding:3px 3px;
+  border:.5px solid transparent;border-radius:4px;background:transparent;
+  color:#1a1a1a;width:100%;cursor:pointer}
 .item-row select:hover{border-color:#ccc;background:#fff}
 .iamt{font-size:11.5px;font-weight:600;text-align:right;padding-right:2px}
-.idel{width:22px;height:22px;border-radius:4px;border:none;background:transparent;color:#ccc;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.idel{width:22px;height:22px;border-radius:4px;border:none;background:transparent;
+  color:#ccc;cursor:pointer;font-size:14px;display:flex;align-items:center;
+  justify-content:center;touch-action:manipulation}
 .idel:active{background:#fee2e2;color:#c0392b}
 .add-row{padding:8px 12px;border-bottom:1px solid #ede9e1}
-.add-btn{width:100%;padding:9px;border-radius:7px;border:1.5px dashed #0f6e56;background:transparent;color:#0f6e56;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.add-btn{width:100%;padding:9px;border-radius:7px;border:1.5px dashed #0f6e56;
+  background:transparent;color:#0f6e56;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
 .add-btn:active{background:#e1f5ee}
+
+/* TOTALS */
 .totals-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:400px){.totals-grid{grid-template-columns:1fr}}
 .words-col{padding:12px 14px;border-right:1px solid #e0ddd6}
-.words-lbl{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.words-lbl{font-size:9px;font-weight:700;color:#aaa;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:4px}
 .words-val{font-size:11px;color:#444;font-style:italic;line-height:1.6}
 .tax-tbl{margin-top:9px;padding-top:9px;border-top:1px solid #e5e2da}
-.tax-hdr,.tax-row2{display:grid;grid-template-columns:46px 1fr 40px 62px;gap:4px;font-size:10px;padding:2px 0;border-bottom:1px solid #f5f2ec}
+.tax-hdr,.tax-row2{display:grid;grid-template-columns:46px 1fr 40px 62px;
+  gap:4px;font-size:10px;padding:2px 0;border-bottom:1px solid #f5f2ec}
 .tax-hdr{font-weight:700;color:#bbb}
 .totals-col{padding:12px 14px}
-.amt-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;border-bottom:1px solid #f5f2ec}
+.amt-row{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;font-size:12px;border-bottom:1px solid #f5f2ec}
 .amt-row.grand{font-weight:700;font-size:15px;color:#0f6e56;border-bottom:none;padding-top:6px}
+
+/* FOOTER */
 .inv-footer{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e0ddd6}
 @media(max-width:380px){.inv-footer{grid-template-columns:1fr}}
 .fcol{padding:10px 14px;font-size:11px;color:#666;border-right:1px solid #e0ddd6}
 .fcol:last-child{border-right:none;text-align:right}
-.flbl{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.fcol textarea{width:100%;font-size:11px;font-family:'DM Sans',sans-serif;padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;resize:vertical;min-height:32px;color:#555;background:#fff}
-.sig-line{margin-top:20px;border-top:1px solid #e0ddd6;padding-top:5px;font-size:9px;color:#bbb}
+.flbl{font-size:9px;font-weight:700;color:#bbb;text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:4px}
+.fcol textarea{width:100%;font-size:11px;font-family:'DM Sans',sans-serif;
+  padding:4px 6px;border:1px solid #e5e2da;border-radius:5px;
+  resize:vertical;min-height:32px;color:#555;background:#fff}
+.sig-line{margin-top:20px;border-top:1px solid #e0ddd6;padding-top:5px;
+  font-size:9px;color:#bbb}
+
+/* FLASH */
 @keyframes ffield{0%{background:#c8ffe8}100%{background:transparent}}
 .flash-field input,.flash-field textarea{animation:ffield .9s ease}
+
+/* PRINT — clean invoice, no UI */
 @media print{
-  .topbar,.statusbar,.log-panel,.voice-section,.cmd-bar,.hint,.tbar-btn{display:none!important}
-  .inv-outer{padding:0}.inv-card{border-radius:0;box-shadow:none}body{background:#fff}
-  .item-row input,.item-row select,.ifield input,.prow input,.prow textarea{border:none!important;background:transparent!important}
+  .topbar,.statusbar,.log-panel,.voice-section,.cmd-bar,.hint,
+  .memory-section,.modal-overlay{display:none!important}
+  .inv-outer{padding:0}
+  .inv-card{border-radius:0;box-shadow:none}
+  body{background:#fff}
+  .item-row input,.item-row select,.ifield input,.prow input,.prow textarea,
+  .fcol textarea{border:none!important;background:transparent!important}
+  .add-row,.idel{display:none!important}
 }
 </style>
 </head>
@@ -184,43 +282,112 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <div class="statusbar">
   <div class="dot" id="dot"></div>
-  <div class="status-text" id="statusText">Ready — tap mic to speak</div>
+  <div class="status-text" id="statusText">Ready — tap mic or type a command</div>
 </div>
 
 <div class="log-panel" id="logPanel">
-  <div class="log-entry sys">Agent log</div>
+  <div class="log-entry sys">Agent log — commands and responses appear here</div>
 </div>
 
-<!-- VOICE — info left, mic button RIGHT for right-handed thumb -->
 <div class="voice-section">
-  <div class="voice-row">
-    <div class="voice-info">
-      <div class="voice-label" id="voiceLabel">Tap mic to start</div>
-      <div class="voice-transcript" id="transcript">Try: "Invoice for Lambodar, 500 Tata manuals at 5.50"</div>
-      <div class="vol-wrap" id="volWrap"><div class="vol-fill" id="volFill"></div></div>
-    </div>
-    <!-- MIC ON RIGHT -->
-    <button class="mic-btn" id="micBtn" onclick="toggleVoice()">
-      🎤
-      <span class="mic-hint" id="micHint">TAP</span>
-    </button>
+  <button class="mic-btn" id="micBtn" onclick="toggleVoice()">🎤</button>
+  <div class="mic-info">
+    <div class="mic-label" id="micLabel">Tap mic to speak</div>
+    <div class="mic-transcript" id="transcript">Or type a command below ↓</div>
   </div>
 </div>
 
 <div class="cmd-bar">
   <input class="cmd-input" id="cmdInput"
-    placeholder='Or type: "Invoice for Lambodar, 500 Tata manuals at 5.50"'
+    placeholder='e.g. "Invoice for Lambodar, 500 Tata manuals"'
     onkeydown="if(event.key==='Enter')sendCmd()">
   <button class="cmd-send" onclick="sendCmd()">➤</button>
 </div>
 
-<div class="hint">
-  <strong>One sentence:</strong> "Invoice for Lambodar, 500 Tata manuals at 5.50 and 600 BE stickers at 0.90" &nbsp;|&nbsp;
-  "Add CG manual 1000 at 0.95" &nbsp;|&nbsp; "Item 2 quantity 2000" &nbsp;|&nbsp; "Delete item 3"
+<!-- MEMORY BUTTONS -->
+<div class="memory-section">
+  <button class="mem-btn" onclick="openModal('party')">
+    👥 Parties
+    <span id="partyCount">0 saved</span>
+  </button>
+  <button class="mem-btn" onclick="openModal('item')">
+    📦 Items
+    <span id="itemCount">0 saved</span>
+  </button>
+  <button class="mem-btn" onclick="saveCurrentParty()" style="max-width:100px">
+    💾 Save Party
+    <span>from invoice</span>
+  </button>
 </div>
 
+<div class="hint">
+  <strong>Voice / Type:</strong>
+  "Invoice for Lambodar, 500 Tata manuals" &nbsp;|&nbsp;
+  "Add CG manual 1000 at 0.95" &nbsp;|&nbsp;
+  "Item 2 quantity 2000" &nbsp;|&nbsp;
+  "Delete item 3" &nbsp;|&nbsp;
+  "Same address for shipping" &nbsp;|&nbsp;
+  "Invoice number 25/26-450"
+</div>
+
+<!-- PARTY MODAL -->
+<div class="modal-overlay" id="partyModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">👥 Party Memory</div>
+      <button class="modal-close" onclick="closeModal('party')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="save-form">
+        <div class="save-form-title">Save New Party</div>
+        <div class="sf-row"><label>Short Nickname (e.g. "Lambodar")</label>
+          <input id="newPartyNick" placeholder="Short name to remember"></div>
+        <div class="sf-row"><label>Full Party Name</label>
+          <input id="newPartyName" placeholder="LAMBODAR MOULDERS PVT LTD"></div>
+        <div class="sf-row"><label>Address</label>
+          <input id="newPartyAddr" placeholder="Full address"></div>
+        <div class="sf-row"><label>GSTIN</label>
+          <input id="newPartyGST" placeholder="27XXXXXXXX1ZX"></div>
+        <div class="sf-row"><label>State (e.g. 27-Maharashtra)</label>
+          <input id="newPartyState" placeholder="27-Maharashtra" value="27-Maharashtra"></div>
+        <button class="sf-save" onclick="saveParty()">💾 Save Party</button>
+      </div>
+      <div class="mem-list" id="partyList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM MODAL -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">📦 Item Catalogue</div>
+      <button class="modal-close" onclick="closeModal('item')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="save-form">
+        <div class="save-form-title">Save New Item</div>
+        <div class="sf-row"><label>Item Name (UPPERCASE)</label>
+          <input id="newItemName" placeholder="TATA CROMA INST MANUAL 50L"></div>
+        <div class="sf-row"><label>HSN Code</label>
+          <input id="newItemHSN" placeholder="4821" value="4821"></div>
+        <div class="sf-row"><label>Default Price (₹)</label>
+          <input id="newItemPrice" type="number" step="0.01" placeholder="5.50"></div>
+        <div class="sf-row"><label>Default GST %</label>
+          <input id="newItemGST" type="number" placeholder="18" value="18"></div>
+        <div class="sf-row"><label>Default Unit</label>
+          <input id="newItemUnit" placeholder="Nos" value="Nos"></div>
+        <button class="sf-save" onclick="saveItemCatalogue()">💾 Save Item</button>
+      </div>
+      <div class="mem-list" id="itemCatalogueList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- INVOICE -->
 <div class="inv-outer">
 <div class="inv-card">
+
   <div class="inv-head">
     <div>
       <div class="co-name">PRABHA ENTERPRISES</div>
@@ -288,222 +455,203 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div class="sig-line">Authorized Signatory</div>
     </div>
   </div>
+
 </div>
 </div>
 </div>
 
 <script>
-// ─── STATE ────────────────────────────────────────────────────────────────────
+// ── STATE ──
 let items = [];
 document.getElementById('invDate').value = new Date().toISOString().split('T')[0];
 
-// ─── VOICE — clean tap-start / tap-stop / auto-send ──────────────────────────
-let mediaRecorder = null, audioChunks = [], isRecording = false, busy = false;
-let audioCtx = null, analyser = null, animFrame = null;
+// ── LOCALSTORAGE KEYS ──
+const PARTY_KEY = 'prabha_parties';
+const ITEM_KEY  = 'prabha_items';
 
-function toggleVoice(){
-  if(busy) return;
-  if(!isRecording){ startRecording(); }
-  else { stopRecording(); }
+// ── PARTY MEMORY ──
+function getParties(){
+  try{ return JSON.parse(localStorage.getItem(PARTY_KEY)||'[]'); }catch(e){ return []; }
+}
+function saveParties(arr){
+  localStorage.setItem(PARTY_KEY, JSON.stringify(arr));
+  updateMemoryCounts();
 }
 
-async function startRecording(){
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio:{ echoCancellation:true, noiseSuppression:true, sampleRate:16000 }
-    });
-    audioChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => { if(e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = () => {
-      stream.getTracks().forEach(t => t.stop());
-      stopVisualizer();
-      sendAudioToWhisper();
-    };
-    mediaRecorder.start();
-    isRecording = true;
+function saveParty(){
+  const nick  = document.getElementById('newPartyNick').value.trim();
+  const name  = document.getElementById('newPartyName').value.trim();
+  const addr  = document.getElementById('newPartyAddr').value.trim();
+  const gst   = document.getElementById('newPartyGST').value.trim();
+  const state = document.getElementById('newPartyState').value.trim();
+  if(!nick || !name){ alert('Enter at least a nickname and full name.'); return; }
+  const parties = getParties();
+  parties.unshift({ nick, name, addr, gst, state });
+  saveParties(parties);
+  document.getElementById('newPartyNick').value='';
+  document.getElementById('newPartyName').value='';
+  document.getElementById('newPartyAddr').value='';
+  document.getElementById('newPartyGST').value='';
+  document.getElementById('newPartyState').value='27-Maharashtra';
+  renderPartyList();
+  addLog('sys','Party saved: '+nick);
+}
 
-    // UI
-    const btn = document.getElementById('micBtn');
-    btn.textContent = '⏹';
-    btn.appendChild(Object.assign(document.createElement('span'),{className:'mic-hint',textContent:'STOP'}));
-    btn.className = 'mic-btn recording';
-    setVoiceLabel('recording','🔴 Recording... tap to stop');
-    setStatus('recording','Recording — tap mic again to stop');
-    document.getElementById('volWrap').classList.add('show');
-    document.getElementById('transcript').textContent = '...';
-    document.getElementById('transcript').className = 'voice-transcript';
-    startVisualizer(stream);
+// Save current Bill To section as a party
+function saveCurrentParty(){
+  const name  = document.getElementById('billName').value.trim();
+  const addr  = document.getElementById('billAddr').value.trim();
+  const gst   = document.getElementById('billGST').value.trim();
+  const state = document.getElementById('billState').value.trim();
+  if(!name){ alert('Bill To name is empty — fill the invoice first.'); return; }
+  const nick = prompt('Short nickname for this party?\n(e.g. "Lambodar")', name.split(' ')[0]);
+  if(!nick) return;
+  const parties = getParties();
+  parties.unshift({ nick: nick.trim(), name, addr, gst, state });
+  saveParties(parties);
+  renderPartyList();
+  addLog('sys','Party saved: '+nick.trim());
+}
 
-    // Safety auto-stop 25s
-    setTimeout(() => { if(isRecording) stopRecording(); }, 25000);
-  } catch(err){
-    addLog('err','Mic: ' + err.message);
-    if(!logOpen) toggleLog();
+function loadParty(i){
+  const p = getParties()[i];
+  if(!p) return;
+  document.getElementById('billName').value  = p.name  || '';
+  document.getElementById('billAddr').value  = p.addr  || '';
+  document.getElementById('billGST').value   = p.gst   || '';
+  document.getElementById('billState').value = p.state || '27-Maharashtra';
+  document.getElementById('shipName').value  = p.name  || '';
+  document.getElementById('shipAddr').value  = p.addr  || '';
+  document.getElementById('placeSupply').value = p.state || '27-Maharashtra';
+  flashField('f-billName'); flashField('f-billAddr'); flashField('f-billGST');
+  flashField('f-shipName'); flashField('f-shipAddr');
+  closeModal('party');
+  setStatus('', 'Party loaded: ' + p.nick);
+  addLog('agent', 'Party loaded: ' + p.name);
+}
+
+function deleteParty(i){
+  if(!confirm('Delete this party?')) return;
+  const parties = getParties();
+  parties.splice(i,1);
+  saveParties(parties);
+  renderPartyList();
+}
+
+function renderPartyList(){
+  const parties = getParties();
+  const el = document.getElementById('partyList');
+  if(!parties.length){
+    el.innerHTML='<div class="mem-empty">No parties saved yet.<br>Fill invoice → tap 💾 Save Party button</div>';
+    return;
   }
+  el.innerHTML = parties.map((p,i)=>`
+    <div class="mem-item" onclick="loadParty(${i})">
+      <div class="mem-item-info">
+        <div class="mem-item-name">${esc(p.nick)} — ${esc(p.name)}</div>
+        <div class="mem-item-sub">${esc(p.gst||'')} &nbsp;|&nbsp; ${esc(p.state||'')}</div>
+      </div>
+      <button class="mem-del" onclick="event.stopPropagation();deleteParty(${i})">✕</button>
+    </div>`).join('');
 }
 
-function stopRecording(){
-  if(!isRecording) return;
-  isRecording = false;
-  if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-
-  const btn = document.getElementById('micBtn');
-  btn.textContent = '⏳';
-  btn.appendChild(Object.assign(document.createElement('span'),{className:'mic-hint',textContent:'...'}));
-  btn.className = 'mic-btn thinking';
-  setVoiceLabel('thinking','Transcribing...');
-  setStatus('thinking','Sending to Whisper AI...');
-  document.getElementById('volWrap').classList.remove('show');
+// ── ITEM CATALOGUE ──
+function getCatalogue(){
+  try{ return JSON.parse(localStorage.getItem(ITEM_KEY)||'[]'); }catch(e){ return []; }
+}
+function saveCatalogue(arr){
+  localStorage.setItem(ITEM_KEY, JSON.stringify(arr));
+  updateMemoryCounts();
 }
 
-function startVisualizer(stream){
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
-  audioCtx.createMediaStreamSource(stream).connect(analyser);
-  const data = new Uint8Array(analyser.frequencyBinCount);
-  function draw(){
-    animFrame = requestAnimationFrame(draw);
-    analyser.getByteFrequencyData(data);
-    const avg = data.reduce((a,b) => a+b, 0) / data.length;
-    document.getElementById('volFill').style.width = Math.min(avg * 2.5, 100) + '%';
-  }
-  draw();
-}
-function stopVisualizer(){
-  if(animFrame) cancelAnimationFrame(animFrame);
-  if(audioCtx) audioCtx.close().catch(()=>{});
-  document.getElementById('volFill').style.width = '0%';
-}
-
-async function sendAudioToWhisper(){
-  const blob = new Blob(audioChunks, {type:'audio/webm'});
-  const form = new FormData();
-  form.append('audio', blob, 'audio.webm');
-  try{
-    const res = await fetch('/transcribe', {method:'POST', body:form});
-    const data = await res.json();
-    if(data.error) throw new Error(data.error);
-    const text = (data.text || '').trim();
-    if(!text){ resetMic(); addLog('err','No speech detected'); return; }
-    document.getElementById('transcript').textContent = text;
-    document.getElementById('transcript').className = 'voice-transcript active';
-    addLog('user', text);
-    await processText(text);
-  } catch(err){
-    addLog('err', err.message);
-    setStatus('err','Error — tap Log');
-    resetMic();
-    if(!logOpen) toggleLog();
-  }
+function saveItemCatalogue(){
+  const name  = document.getElementById('newItemName').value.trim().toUpperCase();
+  const hsn   = document.getElementById('newItemHSN').value.trim() || '4821';
+  const price = parseFloat(document.getElementById('newItemPrice').value) || 0;
+  const gst   = parseInt(document.getElementById('newItemGST').value) || 18;
+  const unit  = document.getElementById('newItemUnit').value.trim() || 'Nos';
+  if(!name){ alert('Enter item name.'); return; }
+  const cat = getCatalogue();
+  cat.unshift({ name, hsn, price, gst, unit });
+  saveCatalogue(cat);
+  document.getElementById('newItemName').value='';
+  document.getElementById('newItemPrice').value='';
+  document.getElementById('newItemHSN').value='4821';
+  document.getElementById('newItemGST').value='18';
+  document.getElementById('newItemUnit').value='Nos';
+  renderItemCatalogueList();
+  addLog('sys','Item saved: '+name);
 }
 
-function resetMic(){
-  const btn = document.getElementById('micBtn');
-  btn.textContent = '🎤';
-  btn.appendChild(Object.assign(document.createElement('span'),{className:'mic-hint',id:'micHint',textContent:'TAP'}));
-  btn.className = 'mic-btn';
-  setVoiceLabel('','Tap mic to start');
-  setStatus('','Ready — tap mic to speak');
-}
-
-// ─── TEXT CMD ─────────────────────────────────────────────────────────────────
-function sendCmd(){
-  const el = document.getElementById('cmdInput');
-  const txt = el.value.trim(); if(!txt) return; el.value = '';
-  addLog('user', txt);
-  document.getElementById('transcript').textContent = txt;
-  document.getElementById('transcript').className = 'voice-transcript active';
-  processText(txt);
-}
-
-// ─── PROCESS → AGENT ──────────────────────────────────────────────────────────
-async function processText(text){
-  text = text.replace(/[\u0900-\u097F]/g,'').replace(/\s+/g,' ').trim();
-  if(!text) return;
-  if(busy){ addLog('sys','Still processing...'); return; }
-  busy = true;
-  setStatus('thinking','Thinking...');
-  setVoiceLabel('thinking','AI thinking...');
-
-  const state = {
-    invoiceNo:   document.getElementById('invNo').value,
-    date:        document.getElementById('invDate').value,
-    placeSupply: document.getElementById('placeSupply').value,
-    billName:    document.getElementById('billName').value,
-    billAddr:    document.getElementById('billAddr').value,
-    billGST:     document.getElementById('billGST').value,
-    shipName:    document.getElementById('shipName').value,
-    shipAddr:    document.getElementById('shipAddr').value,
-    bankDetails: document.getElementById('bankDetails').value,
-    items:       items.map((it,i) => ({index:i+1,...it}))
-  };
-
-  try{
-    const res = await fetch('/agent',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({text, invoice_state:state})
-    });
-    const data = await res.json();
-    if(data.error) throw new Error(data.error);
-    applyActions(data.actions || []);
-    const msg = data.message || 'Done.';
-    addLog('agent', msg);
-    setStatus('ok', '✓ ' + msg);
-    setVoiceLabel('ok','✓ Done');
-    document.getElementById('transcript').textContent = msg;
-    document.getElementById('transcript').className = 'voice-transcript active';
-
-    const btn = document.getElementById('micBtn');
-    btn.textContent = '✓';
-    btn.className = 'mic-btn ok';
-    setTimeout(resetMic, 1800);
-  } catch(err){
-    addLog('err', err.message);
-    setStatus('err','Error — tap Log');
-    if(!logOpen) toggleLog();
-    resetMic();
-  } finally{
-    busy = false;
-  }
-}
-
-// ─── APPLY ACTIONS ────────────────────────────────────────────────────────────
-function applyActions(actions){
-  actions.forEach(a => {
-    if(a.type==='add_item'){
-      items.push({name:a.name||'Item',hsn:a.hsn||'4821',qty:+a.qty||1,unit:a.unit||'Nos',price:+a.price||0,gst:+a.gst||18});
-    } else if(a.type==='update_item'){
-      const idx=a.index-1;
-      if(items[idx]) items[idx][a.field] = isNaN(+a.value) ? a.value : +a.value;
-    } else if(a.type==='delete_item'){
-      items.splice(a.index-1,1);
-    } else if(a.type==='clear_items'){
-      items=[];
-    } else if(a.type==='update_field'){
-      const el=document.getElementById(a.field);
-      if(el){ el.value=a.value; flashField('f-'+a.field); }
-    } else if(a.type==='copy_bill_to_ship'){
-      document.getElementById('shipName').value=document.getElementById('billName').value;
-      document.getElementById('shipAddr').value=document.getElementById('billAddr').value;
-      flashField('f-shipName'); flashField('f-shipAddr');
-    }
-  });
+function loadCatalogueItem(i){
+  const it = getCatalogue()[i];
+  if(!it) return;
+  items.push({ name:it.name, hsn:it.hsn, qty:1, unit:it.unit, price:it.price, gst:it.gst });
   renderItems();
-  setTimeout(()=>{
-    const added = actions.filter(a=>a.type==='add_item').length;
-    for(let i=0;i<added;i++) flashRow(items.length-1-i);
-    actions.filter(a=>a.type==='update_item').forEach(a=>flashRow(a.index-1));
-  }, 80);
+  flashRow(items.length-1);
+  closeModal('item');
+  setStatus('', 'Item added: '+it.name);
+  addLog('agent','Item added from catalogue: '+it.name);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
+function deleteCatalogueItem(i){
+  if(!confirm('Delete this item?')) return;
+  const cat = getCatalogue();
+  cat.splice(i,1);
+  saveCatalogue(cat);
+  renderItemCatalogueList();
+}
+
+function renderItemCatalogueList(){
+  const cat = getCatalogue();
+  const el = document.getElementById('itemCatalogueList');
+  if(!cat.length){
+    el.innerHTML='<div class="mem-empty">No items saved yet.<br>Fill form above to save an item</div>';
+    return;
+  }
+  el.innerHTML = cat.map((it,i)=>`
+    <div class="mem-item" onclick="loadCatalogueItem(${i})">
+      <div class="mem-item-info">
+        <div class="mem-item-name">${esc(it.name)}</div>
+        <div class="mem-item-sub">HSN ${esc(it.hsn)} &nbsp;|&nbsp; ₹${it.price.toFixed(2)} &nbsp;|&nbsp; GST ${it.gst}%</div>
+      </div>
+      <button class="mem-del" onclick="event.stopPropagation();deleteCatalogueItem(${i})">✕</button>
+    </div>`).join('');
+}
+
+function updateMemoryCounts(){
+  document.getElementById('partyCount').textContent = getParties().length+' saved';
+  document.getElementById('itemCount').textContent  = getCatalogue().length+' saved';
+}
+
+// ── MODALS ──
+function openModal(type){
+  if(type==='party'){
+    renderPartyList();
+    document.getElementById('partyModal').classList.add('open');
+  } else {
+    renderItemCatalogueList();
+    document.getElementById('itemModal').classList.add('open');
+  }
+}
+function closeModal(type){
+  document.getElementById(type==='party'?'partyModal':'itemModal').classList.remove('open');
+}
+document.getElementById('partyModal').addEventListener('click',function(e){
+  if(e.target===this) closeModal('party');
+});
+document.getElementById('itemModal').addEventListener('click',function(e){
+  if(e.target===this) closeModal('item');
+});
+
+// ── INVOICE RENDER ──
 function renderItems(){
   const body = document.getElementById('itemsBody');
   body.innerHTML = '';
-  items.forEach((it,i) => {
-    const taxable=it.qty*it.price, gstAmt=taxable*it.gst/100, total=taxable+gstAmt;
-    const row=document.createElement('div');
+  items.forEach((it,i)=>{
+    const taxable = it.qty*it.price, gstAmt = taxable*it.gst/100;
+    const total = taxable+gstAmt;
+    const row = document.createElement('div');
     row.className='item-row'; row.id='row-'+i;
     const units=['Nos','Kg','Box','Pcs','Set','Mtr','Ltr'];
     const gsts=[0,5,12,18,28];
@@ -532,37 +680,40 @@ function addItem(){
   renderItems();
   setTimeout(()=>{
     const rows=document.querySelectorAll('.item-row');
-    if(rows.length){ const inp=rows[rows.length-1].querySelector('input');
-      if(inp){ inp.focus(); inp.scrollIntoView({behavior:'smooth',block:'center'}); } }
+    if(rows.length){const inp=rows[rows.length-1].querySelector('input');
+      if(inp){inp.focus();inp.scrollIntoView({behavior:'smooth',block:'center'});}}
   },60);
 }
 
 function updateTotals(){
-  let taxable=0,gstTotal=0; const gstMap={};
+  let taxable=0,gstTotal=0;
+  const gstMap={};
   items.forEach(it=>{
     const t=it.qty*it.price,g=t*it.gst/100;
-    taxable+=t; gstTotal+=g;
-    if(!gstMap[it.gst]) gstMap[it.gst]={taxable:0,tax:0};
-    gstMap[it.gst].taxable+=t; gstMap[it.gst].tax+=g;
+    taxable+=t;gstTotal+=g;
+    if(!gstMap[it.gst])gstMap[it.gst]={taxable:0,tax:0};
+    gstMap[it.gst].taxable+=t;gstMap[it.gst].tax+=g;
   });
   const grand=taxable+gstTotal;
   document.getElementById('subTaxable').textContent='₹ '+taxable.toFixed(2);
   document.getElementById('totalGST').textContent='₹ '+gstTotal.toFixed(2);
   document.getElementById('grandTotal').textContent='₹ '+grand.toFixed(2);
   document.getElementById('amtWords').textContent=n2w(grand);
-  const tr=document.getElementById('taxRows'); tr.innerHTML='';
+  const tr=document.getElementById('taxRows');tr.innerHTML='';
   Object.entries(gstMap).forEach(([rate,d])=>{
     ['SGST','CGST'].forEach(type=>{
-      const r=document.createElement('div'); r.className='tax-row2';
+      const r=document.createElement('div');r.className='tax-row2';
       r.innerHTML=`<div>${type}</div><div>₹${d.taxable.toFixed(0)}</div><div>${(+rate/2).toFixed(1)}%</div><div style="text-align:right">₹${(d.tax/2).toFixed(2)}</div>`;
       tr.appendChild(r);
     });
   });
 }
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+
 function n2w(n){
-  const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const o=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
+    'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   const t=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
   const ps=Math.round((n%1)*100),rs=Math.floor(n);
   function w(x){
@@ -577,9 +728,18 @@ function n2w(n){
   return (rs?w(rs).trim()+' Rupees':'')+(ps?' and '+w(ps).trim()+' Paise':'')+' Only';
 }
 
-function flashRow(i){ const el=document.getElementById('row-'+i); if(!el)return; el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),900); }
-function flashField(id){ const el=document.getElementById(id); if(!el)return; el.classList.add('flash-field'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); setTimeout(()=>el.classList.remove('flash-field'),900); }
+function flashRow(i){
+  const el=document.getElementById('row-'+i);
+  if(!el)return;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),900);
+}
+function flashField(id){
+  const el=document.getElementById(id);
+  if(!el)return;el.classList.add('flash-field');
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(()=>el.classList.remove('flash-field'),900);
+}
 
+// ── LOG ──
 let logOpen=false;
 function toggleLog(){
   logOpen=!logOpen;
@@ -588,31 +748,192 @@ function toggleLog(){
 }
 function addLog(type,msg){
   const p=document.getElementById('logPanel');
-  const d=document.createElement('div'); d.className='log-entry '+type;
+  const d=document.createElement('div');d.className='log-entry '+type;
   d.textContent=(type==='agent'?'✓ ':type==='user'?'▶ ':type==='err'?'✗ ':'  ')+msg;
-  p.appendChild(d); p.scrollTop=p.scrollHeight;
-  if(!logOpen && type==='err') toggleLog();
+  p.appendChild(d);p.scrollTop=p.scrollHeight;
 }
+
+// ── STATUS ──
 function setStatus(state,msg){
   document.getElementById('dot').className='dot '+(state||'');
-  document.getElementById('statusText').textContent=msg;
+  const el=document.getElementById('statusText');
+  el.textContent=msg;el.className='status-text'+(state==='on'?' active':'');
 }
-function setVoiceLabel(state,label){
-  const el=document.getElementById('voiceLabel');
-  el.textContent=label; el.className='voice-label '+(state||'');
+function setMic(state,label){
+  document.getElementById('micBtn').className='mic-btn '+(state||'');
+  const lbl=document.getElementById('micLabel');
+  lbl.textContent=label;lbl.className='mic-label '+(state||'');
 }
 
-function clearInvoice(){
-  if(!confirm('Start a new invoice?'))return;
-  items=[];
-  ['billName','billAddr','billGST','billState','shipName','shipAddr','bankDetails'].forEach(id=>{
-    const e=document.getElementById(id);if(e)e.value='';
+// ── VOICE ──
+let recognition=null,isListening=false;
+function toggleVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert('Voice needs Chrome browser.');return;}
+  if(isListening){stopVoice();return;}
+  recognition=new SR();
+  recognition.continuous=true;
+  recognition.interimResults=true;
+  recognition.lang='en-IN';
+  recognition.onstart=()=>{
+    isListening=true;
+    document.getElementById('micBtn').textContent='⏹';
+    setMic('on','Listening...');
+    setStatus('on','Listening — speak your command');
+  };
+  let debounceTimer=null;
+  recognition.onresult=(e)=>{
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal) final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    const t=document.getElementById('transcript');
+    t.textContent=final||interim||'...';
+    t.className='mic-transcript active';
+    if(final){
+      clearTimeout(debounceTimer);
+      debounceTimer=setTimeout(()=>processText(final.trim()),400);
+    }
+  };
+  recognition.onerror=(e)=>{addLog('err','Mic: '+e.error);stopVoice();};
+  recognition.onend=()=>{
+    if(isListening){
+      setTimeout(()=>{
+        try{ recognition.start(); }
+        catch(e){ addLog('err','Mic restart failed: '+e.message);stopVoice(); }
+      },300);
+    }
+  };
+  recognition.start();
+}
+function stopVoice(){
+  isListening=false;
+  if(recognition) recognition.stop();
+  document.getElementById('micBtn').textContent='🎤';
+  setMic('','Tap mic to speak');
+  setStatus('','Ready');
+}
+
+// ── TEXT COMMAND ──
+function sendCmd(){
+  const el=document.getElementById('cmdInput');
+  const txt=el.value.trim();
+  if(!txt)return;
+  el.value='';
+  processText(txt);
+}
+
+// ── PROCESS TEXT — FIXED (function properly declared) ──
+let busy=false;
+async function processText(text){
+  // Strip Devanagari / non-ASCII that Whisper sometimes injects
+  text = text.replace(/[\u0900-\u097F]/g,'').replace(/\s+/g,' ').trim();
+  if(!text) return;
+  if(busy) return;
+  busy=true;
+
+  addLog('user',text);
+  setStatus('thinking','Thinking...');
+  setMic('thinking','Processing...');
+  document.getElementById('transcript').textContent=text;
+  document.getElementById('transcript').className='mic-transcript active';
+
+  const state={
+    invoiceNo:   document.getElementById('invNo').value,
+    date:        document.getElementById('invDate').value,
+    placeSupply: document.getElementById('placeSupply').value,
+    billName:    document.getElementById('billName').value,
+    billAddr:    document.getElementById('billAddr').value,
+    billGST:     document.getElementById('billGST').value,
+    shipName:    document.getElementById('shipName').value,
+    shipAddr:    document.getElementById('shipAddr').value,
+    bankDetails: document.getElementById('bankDetails').value,
+    terms:       document.getElementById('terms').value,
+    items:       items.map((it,i)=>({index:i+1,...it}))
+  };
+
+  try{
+    const res=await fetch('/agent',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text, invoice_state:state})
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    applyActions(data.actions||[]);
+    const msg=data.message||'Done.';
+    addLog('agent',msg);
+    setStatus('',msg);
+    document.getElementById('transcript').textContent=msg;
+    document.getElementById('transcript').className='mic-transcript';
+  }catch(err){
+    addLog('err',err.message);
+    setStatus('err','Error — tap Log to see');
+    if(!logOpen) toggleLog();
+  }finally{
+    busy=false;
+    if(isListening){ setMic('on','Listening...'); setStatus('on','Listening'); }
+    else{ setMic('','Tap mic to speak'); }
+  }
+}
+
+// ── APPLY ACTIONS ──
+function applyActions(actions){
+  actions.forEach(a=>{
+    switch(a.type){
+      case 'add_item':
+        items.push({name:a.name||'Item',hsn:a.hsn||'4821',qty:+a.qty||1,
+          unit:a.unit||'Nos',price:+a.price||0,gst:+a.gst||18});
+        break;
+      case 'update_item':{
+        const idx=a.index-1;
+        if(items[idx]!==undefined)
+          items[idx][a.field]=isNaN(+a.value)?a.value:+a.value;
+        break;
+      }
+      case 'delete_item':
+        items.splice(a.index-1,1);
+        break;
+      case 'clear_items':
+        items=[];
+        break;
+      case 'update_field':{
+        const el=document.getElementById(a.field);
+        if(el){ el.value=a.value; flashField('f-'+a.field); }
+        break;
+      }
+      case 'copy_bill_to_ship':
+        document.getElementById('shipName').value=document.getElementById('billName').value;
+        document.getElementById('shipAddr').value=document.getElementById('billAddr').value;
+        flashField('f-shipName'); flashField('f-shipAddr');
+        break;
+    }
   });
+  renderItems();
+  setTimeout(()=>{
+    actions.filter(a=>a.type==='add_item').forEach(()=>flashRow(items.length-1));
+    actions.filter(a=>a.type==='update_item').forEach(a=>flashRow(a.index-1));
+  },50);
+}
+
+// ── CLEAR INVOICE ──
+function clearInvoice(){
+  if(!confirm('Start a new invoice?')) return;
+  items=[];
+  ['billName','billAddr','billGST','shipName','shipAddr','bankDetails'].forEach(id=>{
+    const e=document.getElementById(id); if(e) e.value='';
+  });
+  document.getElementById('billState').value='27-Maharashtra';
   document.getElementById('invNo').value='25/26-';
   document.getElementById('invDate').value=new Date().toISOString().split('T')[0];
-  renderItems(); addLog('sys','New invoice started.');
+  document.getElementById('placeSupply').value='27-Maharashtra';
+  renderItems();
+  addLog('sys','New invoice started.');
 }
 
+// ── INIT ──
+updateMemoryCounts();
 renderItems();
 </script>
 </body>
