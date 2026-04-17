@@ -1,11 +1,10 @@
 """
 Prabha Enterprises — Voice Invoice Agent
-Backend: Flask + Groq (Llama 3.3 70B + Whisper)
+Backend: Flask + Groq (Llama 3.3 70B)
 """
 
 import os
 import json
-import tempfile
 from flask import Flask, request, jsonify, send_from_directory
 from groq import Groq
 
@@ -13,78 +12,74 @@ app = Flask(__name__, static_folder="static")
 client = Groq()
 
 SYSTEM_PROMPT = """You are an intelligent invoice assistant for Prabha Enterprises, Aurangabad, Maharashtra, India.
-You help fill and edit GST Tax Invoices by understanding natural language in English, Hindi, or Hinglish.
+You help fill and edit GST Tax Invoices by understanding natural language commands in English.
 
 You receive the current invoice state as JSON + the user's command.
 Return ONLY valid JSON — no prose, no markdown, no explanation.
 
-CRITICAL DECISION RULE — READ THIS FIRST:
-Before deciding add_item vs update_item, scan the existing items list carefully.
-If the user mentions ANY item name that is similar (even slightly) to an existing item → ALWAYS update, NEVER add a new one.
-Similarity examples:
-  "duck tape" = "ductape" = "ducktape" = "DUCK TAPE" = "D TAPE" = "adhesive tape"
-  "tata manual" = "tata croma manual" = "tata inst manual"
-  "kenstar" = "kenstar sticker" = "BE STICKER KENSTAR"
-  "cg" = "CG MANUAL"
-  "godrej" = "GODREJ FRIDGE MANUAL"
-Only use add_item if the item is clearly brand new and has NO match in the existing items list.
+=== ONE-SENTENCE FULL INVOICE (most important feature) ===
+When user says something like:
+  "Invoice for Lambodar, 500 Tata manuals at 5.50 and 600 BE stickers at 0.90"
+  "Make invoice for ABC Company, 1000 CG manuals at 0.95 rupees"
+  "New invoice for XYZ, 200 Godrej manuals 2 rupees each, 100 stickers at 1 rupee"
 
-INTENT RULES:
-- "edit / change / badlo / update / set / karo / kar" = update_item (NEVER add)
-- "add / naya / new / daalo" = add_item (but still check for duplicates first)
-- "delete / hatao / remove / nikalo" = delete_item
-- "last item / aakhri item" = highest index in items list
-- "pehla"=index 1, "doosra"=index 2, "teesra"=index 3, "chautha"=index 4
+You MUST return ALL actions together in one response:
+  1. update_field for billName (and shipName same)
+  2. clear_items (to start fresh)
+  3. add_item for EACH item mentioned
 
-FIELD UPDATE RULES:
-- "quantity / qty / matra / kitna" → field: qty
-- "price / rate / daam / bhav / rupaye" → field: price
-- "name / naam / title" → field: name
-- "HSN / hsn code" → field: hsn
-- "GST / tax" → field: gst
-- "unit / measurement" → field: unit
+Party name rules:
+  - "for [name]" or "to [name]" = billName and shipName
+  - If address/GSTIN not mentioned, leave them as-is (don't clear them)
+  - Always copy billName to shipName unless user says different ship address
 
-NUMBER UNDERSTANDING:
-- paanch sau=500, ek hazaar=1000, do hazaar=2000, teen hazaar=3000
-- das=10, bis=20, pachaas=50, sau=100, paanch=5
-- sawa paanch=5.25, dedh=1.5, adha=0.5, paune do=1.75, sawa=1.25
-- rupaye/rupaiya/rs = price in rupees
-- piece/pcs/nos/nag = unit Nos
+Item parsing rules:
+  - "[qty] [item name] at [price]" or "[qty] [item name] [price] rupees"
+  - Numbers: 500=500, 1000=1000, 0.90=0.90, 5.50=5.50
+  - "each" / "rupees" / "at" / "per piece" all mean price
+  - If GST not mentioned, default 18%
+  - If HSN not mentioned, default 4821
+  - If unit not mentioned, default Nos
+  - Item names ALWAYS UPPERCASE
 
-PARTY FIELD RULES:
-- "bill to / party / customer / client" = billName + billAddr + billGST
-- "same address / same as bill / wahi address" = copy_bill_to_ship
-- "ship to / delivery at" = shipName + shipAddr
+=== SINGLE COMMANDS ===
+- "bill to ABC Company" -> update_field billName only
+- "add Tata manual 500 qty 5.50 price" -> add_item only
+- "item 2 quantity 2000" -> update_item index 2
+- "delete item 3" -> delete_item index 3
+- "invoice number 25/26-450" -> update_field invNo
+- "same address for shipping" -> copy_bill_to_ship
+- "clear all items" -> clear_items
 
-DEFAULTS:
-- HSN: 4821 (printed materials — manuals, stickers, labels, booklets)
-- GST: 18%
-- Unit: Nos
-- Item names: ALWAYS UPPERCASE
+=== FIELD NAMES (exact, case-sensitive) ===
+billName, billAddr, billGST, shipName, shipAddr, invNo, invDate, bankDetails
 
-Return this exact JSON shape:
+=== OUTPUT FORMAT ===
 {
   "message": "one sentence describing what you did",
   "actions": [
-    {"type":"add_item","name":"ITEM NAME UPPERCASE","hsn":"4821","qty":100,"unit":"Nos","price":5.50,"gst":18},
+    {"type":"update_field","field":"billName","value":"PARTY NAME UPPERCASE"},
+    {"type":"update_field","field":"shipName","value":"PARTY NAME UPPERCASE"},
+    {"type":"clear_items"},
+    {"type":"add_item","name":"ITEM NAME UPPERCASE","hsn":"4821","qty":500,"unit":"Nos","price":5.50,"gst":18},
+    {"type":"add_item","name":"SECOND ITEM UPPERCASE","hsn":"4821","qty":600,"unit":"Nos","price":0.90,"gst":18},
     {"type":"update_item","index":1,"field":"qty","value":500},
     {"type":"update_item","index":1,"field":"price","value":6.50},
     {"type":"update_item","index":1,"field":"name","value":"NEW NAME"},
     {"type":"update_item","index":1,"field":"gst","value":12},
     {"type":"update_item","index":1,"field":"unit","value":"Kg"},
     {"type":"delete_item","index":2},
-    {"type":"clear_items"},
-    {"type":"update_field","field":"billName","value":"PARTY NAME"},
     {"type":"update_field","field":"billAddr","value":"address here"},
     {"type":"update_field","field":"billGST","value":"27XXXXX1234X1ZX"},
-    {"type":"update_field","field":"shipName","value":""},
-    {"type":"update_field","field":"shipAddr","value":""},
     {"type":"update_field","field":"invNo","value":"25/26-444"},
     {"type":"update_field","field":"invDate","value":"2026-02-15"},
-    {"type":"update_field","field":"bankDetails","value":"bank info"},
     {"type":"copy_bill_to_ship"}
   ]
-}"""
+}
+
+CRITICAL: For one-sentence full invoice commands, ALWAYS include clear_items + all add_item actions.
+CRITICAL: Party names and item names ALWAYS in UPPERCASE.
+CRITICAL: Return ONLY the JSON object, nothing else."""
 
 
 @app.route("/")
@@ -96,33 +91,23 @@ def index():
 def transcribe():
     if "audio" not in request.files:
         return jsonify({"error": "No audio file"}), 400
-
     audio_file = request.files["audio"]
-
-    with tempfile.NamedTemporaryFile(suffix=".webm", delete=False) as tmp:
-        audio_file.save(tmp.name)
-        tmp_path = tmp.name
-
     try:
-        with open(tmp_path, "rb") as f:
-            result = client.audio.transcriptions.create(
-                file=("audio.webm", f, "audio/webm"),
-                model="whisper-large-v3-turbo",
-                language="en",        # hi = Hindi+Hinglish, best for your use case
-                response_format="text"
-            )
-        transcript = result.strip() if isinstance(result, str) else result.text.strip()
-        return jsonify({"text": transcript})
+        transcription = client.audio.transcriptions.create(
+            model="whisper-large-v3-turbo",
+            file=("audio.webm", audio_file.read(), "audio/webm"),
+            language="en",
+            response_format="text"
+        )
+        return jsonify({"text": transcription})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        os.unlink(tmp_path)
 
 
 @app.route("/agent", methods=["POST"])
 def agent():
-    body = request.get_json(force=True)
-    user_text = body.get("text", "").strip()
+    body          = request.get_json(force=True)
+    user_text     = body.get("text", "").strip()
     invoice_state = body.get("invoice_state", {})
 
     if not user_text:
@@ -138,15 +123,16 @@ def agent():
             model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_content}
+                {"role": "user",   "content": user_content}
             ],
             temperature=0.1,
-            max_tokens=900,
+            max_tokens=1200,
             response_format={"type": "json_object"}
         )
         raw = response.choices[0].message.content.strip()
         parsed = json.loads(raw)
         return jsonify(parsed)
+
     except json.JSONDecodeError:
         return jsonify({"error": f"AI returned invalid JSON: {raw[:200]}"}), 500
     except Exception as e:
@@ -155,7 +141,7 @@ def agent():
 
 @app.route("/health")
 def health():
-    return jsonify({"status": "ok", "model": "llama-3.3-70b-versatile", "stt": "whisper-large-v3-turbo"})
+    return jsonify({"status": "ok", "model": "llama-3.3-70b-versatile"})
 
 
 if __name__ == "__main__":
